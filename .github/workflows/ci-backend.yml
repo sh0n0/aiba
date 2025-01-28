@@ -7,6 +7,7 @@ on:
 
 defaults:
   run:
+    shell: bash
     working-directory: backend
 
 jobs:
@@ -22,6 +23,7 @@ jobs:
         with:
           ruby-version: .tool-versions
           bundler-cache: true
+          working-directory: backend
 
       - name: Scan for common Rails security vulnerabilities using static analysis
         run: bin/brakeman --no-pager
@@ -37,6 +39,7 @@ jobs:
         with:
           ruby-version: .tool-versions
           bundler-cache: true
+          working-directory: backend
 
       - name: Lint code for consistent style
         run: bin/rubocop -f github
@@ -72,6 +75,7 @@ jobs:
         with:
           ruby-version: .tool-versions
           bundler-cache: true
+          working-directory: backend
 
       - name: Run tests
         env:
