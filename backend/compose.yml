@@ -1,0 +1,77 @@
+name: aiba-dev
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    environment:
+      RAILS_ENV: development
+      REDIS_HOST: redis
+      REDIS_PORT: '6379'
+      DB_HOST: db
+      DB_USER: postgres
+      DB_PASS: postgres
+      DB_PORT: '5432'
+      ANYCABLE_HTTP_BROADCAST_URL: http://ws:8090/_broadcast
+    ports:
+      - '3000:3000'
+    depends_on:
+      db:
+        condition: service_started
+      redis:
+        condition: service_started
+      ws:
+        condition: service_started
+      anycable:
+        condition: service_started
+
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+      POSTGRES_HOST_AUTH_METHOD: trust
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data\
+
+  redis:
+    image: redis:7.4.2
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+  ws:
+    image: anycable/anycable-go:1.5
+    ports:
+      - '8080:8080'
+      - '8090'
+    environment:
+      ANYCABLE_HOST: "0.0.0.0"
+      ANYCABLE_BROADCAST_ADAPTER: http
+      ANYCABLE_RPC_HOST: anycable:50051
+      ANYCABLE_DEBUG: ${ANYCABLE_DEBUG:-true}
+      ANYCABLE_SECRET: "anycable-local-secret"
+      ANYCABLE_PUBLIC: true
+
+  anycable:
+    command: bundle exec anycable
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      RAILS_ENV: development
+      ANYCABLE_RPC_HOST: 0.0.0.0:50051
+    ports:
+      - '50051'
+    depends_on:
+      ws:
+        condition: service_started
+
+volumes:
+  postgres_data:
+  redis_data:
