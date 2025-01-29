@@ -23,6 +23,8 @@ gem "thruster", require: false
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin Ajax possible
 # gem "rack-cors"
 
+gem "devise"
+gem "devise_token_auth"
 gem "anycable-rails", "~> 1.5"
 
 group :development, :test do
