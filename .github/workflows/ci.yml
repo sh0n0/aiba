@@ -5,13 +5,12 @@ on:
   push:
     branches: [ main ]
 
-defaults:
-  run:
-    shell: bash
-    working-directory: backend
-
 jobs:
   backend:
+    defaults:
+      run:
+        working-directory: backend
+
     runs-on: ubuntu-latest
 
     services:
@@ -51,3 +50,29 @@ jobs:
           DB_HOST: localhost
           DB_PORT: '5432'
         run: bin/rails db:test:prepare test
+
+  frontend:
+    defaults:
+      run:
+        working-directory: frontend
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .tool-versions
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Lint code for consistent style
+        run: npm run lint
+
+      - name: Run tests
+        run: npm run test
+
