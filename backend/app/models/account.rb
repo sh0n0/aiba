@@ -1,6 +1,7 @@
 class Account < ApplicationRecord
   has_one :user, inverse_of: :account
   has_many :tweets
+  has_many :companions
 
   validates :name, presence: true, uniqueness: true
 
