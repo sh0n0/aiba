@@ -5,7 +5,8 @@ class CreateCompanions < ActiveRecord::Migration[8.0]
       t.string :description, null: false
       t.text :prompt, null: false
       t.datetime :published_at
-      t.references :account, null: false, foreign_key: true
+      t.bigint :created_by, null: false
+      t.foreign_key :accounts, column: :created_by
 
       t.timestamps
     end

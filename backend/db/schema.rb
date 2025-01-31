@@ -29,14 +29,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_30_165544) do
     t.string "description", null: false
     t.text "prompt", null: false
     t.datetime "published_at"
-    t.bigint "account_id", null: false
+    t.bigint "created_by", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["account_id"], name: "index_companions_on_account_id"
   end
 
   create_table "tweets", force: :cascade do |t|
-    t.text "text"
+    t.text "text", null: false
     t.bigint "account_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -67,7 +66,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_30_165544) do
     t.index ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true
   end
 
-  add_foreign_key "companions", "accounts"
+  add_foreign_key "companions", "accounts", column: "created_by"
   add_foreign_key "tweets", "accounts"
   add_foreign_key "users", "accounts"
 end
