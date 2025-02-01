@@ -1,10 +1,22 @@
 import { Button } from "@/components/ui/button.tsx";
+import { createCable } from "@anycable/web";
 import { useState } from "react";
 import viteLogo from "/vite.svg";
 import reactLogo from "./assets/react.svg";
 
 function App() {
 	const [count, setCount] = useState(0);
+
+	const cable = createCable("ws://localhost:8080/cable", {
+		logLevel: "debug",
+	});
+	const signedName =
+		"InRpbWVsaW5lL3B1YmxpYyI=--e0700d7670d753a8d1c0a1948ccc102d7ac94fc26c9e0b84b434d64222e3ca6a";
+	const publicChannel = cable.streamFromSigned(signedName);
+
+	publicChannel.on("message", (message) => {
+		console.log("Received message:", message);
+	});
 
 	return (
 		<>

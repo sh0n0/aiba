@@ -14,6 +14,9 @@ class TweetsController < ApplicationController
   def create
     @tweet = Tweet.new(tweet_params)
 
+    # FIXME
+    ActionCable.server.broadcast("timeline/public", { message: "Hello, world!" })
+
     if @tweet.save
       render json: @tweet, status: :created, location: @tweet
     else
@@ -26,11 +29,12 @@ class TweetsController < ApplicationController
   end
 
   private
-    def set_tweet
-      @tweet = Tweet.find(params.expect(:id))
-    end
 
-    def tweet_params
-      params.expect(tweet: [ :text, :account_id ])
-    end
+  def set_tweet
+    @tweet = Tweet.find(params.expect(:id))
+  end
+
+  def tweet_params
+    params.expect(tweet: [ :text, :account_id ])
+  end
 end

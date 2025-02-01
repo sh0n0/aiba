@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@anycable/web':
+        specifier: ^1.0.0
+        version: 1.0.0
       '@radix-ui/react-slot':
         specifier: ^1.1.1
         version: 1.1.1(@types/react@18.3.18)(react@18.3.1)
@@ -88,6 +91,13 @@ packages:
   '@ampproject/remapping@2.3.0':
     resolution: {integrity: sha512-30iZtAPgz+LTIYoeivqYo853f02jBYSd5uGnGpkFV0M3xOt9aN73erkgYAmZU43x4VfqcnLxW9Kpg3R5LC4YYw==}
     engines: {node: '>=6.0.0'}
+
+  '@anycable/core@1.0.0':
+    resolution: {integrity: sha512-u5A8nR7dq8/vp5+HWLeYhbBJqQcXylUsQ3U0rOarQxI3bY67zEhxe22XnYA+Pcnj2yvd0WESDUZRHICAtXi7jA==}
+    engines: {node: '>=18.0.0'}
+
+  '@anycable/web@1.0.0':
+    resolution: {integrity: sha512-ehfM4D7eNHL7GXZISUTr1H4mQ5xKMfyx45mLTxFReT1sxNT+fIi2CiWz1SNB124q0GX/pqZfIHOf96YbsHAVUA==}
 
   '@babel/code-frame@7.26.2':
     resolution: {integrity: sha512-RJlIHRueQgwWitWgF8OdFYGZX328Ax5BCemNGlqHfplnRT9ESi8JkFlvaVYbS+UubVY6dpv87Fs2u5M29iNFVQ==}
@@ -1210,6 +1220,10 @@ packages:
   mz@2.7.0:
     resolution: {integrity: sha512-z81GNO7nnYMEhrGh9LeymoE4+Yr0Wn5McHIZMK5cfQCl+NDX08sCZgUc9/6MHni9IWuFLm1Z3HTCXu2z9fN62Q==}
 
+  nanoevents@9.1.0:
+    resolution: {integrity: sha512-Jd0fILWG44a9luj8v5kED4WI+zfkkgwKyRQKItTtlPfEsh7Lznfi1kr8/iZ+XAIss4Qq5GqRB0qtWbaz9ceO/A==}
+    engines: {node: ^18.0.0 || >=20.0.0}
+
   nanoid@3.3.8:
     resolution: {integrity: sha512-WNLf5Sd8oZxOm+TzppcYk8gVOgP+l58xNy58D0nbUnOxOWRWvlcCV4kUF7ltmI6PsrLl/BgKEyS4mqsGChFN0w==}
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
@@ -1607,6 +1621,14 @@ snapshots:
     dependencies:
       '@jridgewell/gen-mapping': 0.3.8
       '@jridgewell/trace-mapping': 0.3.25
+
+  '@anycable/core@1.0.0':
+    dependencies:
+      nanoevents: 9.1.0
+
+  '@anycable/web@1.0.0':
+    dependencies:
+      '@anycable/core': 1.0.0
 
   '@babel/code-frame@7.26.2':
     dependencies:
@@ -2570,6 +2592,8 @@ snapshots:
       any-promise: 1.3.0
       object-assign: 4.1.1
       thenify-all: 1.6.0
+
+  nanoevents@9.1.0: {}
 
   nanoid@3.3.8: {}
 

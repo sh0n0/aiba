@@ -12,6 +12,7 @@
 		"preview": "vite preview"
 	},
 	"dependencies": {
+		"@anycable/web": "^1.0.0",
 		"@radix-ui/react-slot": "^1.1.1",
 		"@tanstack/react-router": "^1.98.4",
 		"class-variance-authority": "^0.7.1",
