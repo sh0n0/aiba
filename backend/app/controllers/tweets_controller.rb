@@ -15,6 +15,7 @@ class TweetsController < ApplicationController
     @tweet = Tweet.new(tweet_params)
 
     # FIXME
+    SampleJob.perform_async("Hello, world!")
     ActionCable.server.broadcast("timeline/public", { message: "Hello, world!" })
 
     if @tweet.save

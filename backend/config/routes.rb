@@ -1,7 +1,10 @@
+require "sidekiq/web"
+
 Rails.application.routes.draw do
   resources :companions
   resources :tweets
   mount LetterOpenerWeb::Engine, at: "letter_opener" if Rails.env.development?
+  mount Sidekiq::Web => "/sidekiq" # FIXME: add authentication
 
   mount_devise_token_auth_for "User", at: "auth", controllers: {
     registrations: "auth/registrations"
