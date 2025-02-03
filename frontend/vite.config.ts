@@ -5,10 +5,10 @@ import { defineConfig } from "vite";
 
 // https://vite.dev/config/
 export default defineConfig({
-	plugins: [react(), TanStackRouterVite({ autoCodeSplitting: true })],
-	resolve: {
-		alias: {
-			"@": path.resolve(__dirname, "./src"),
-		},
-	},
+  plugins: [react(), TanStackRouterVite({ autoCodeSplitting: true })],
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "./src"),
+    },
+  },
 });

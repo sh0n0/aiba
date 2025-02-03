@@ -11,9 +11,9 @@ const router = createRouter({ routeTree });
 
 // Register the router instance for type safety
 declare module "@tanstack/react-router" {
-	interface Register {
-		router: typeof router;
-	}
+  interface Register {
+    router: typeof router;
+  }
 }
 
 // Render the app
@@ -21,9 +21,9 @@ const root = document.getElementById("root");
 if (!root) throw new Error("No root element");
 
 if (!root.innerHTML) {
-	ReactDOM.createRoot(root).render(
-		<StrictMode>
-			<RouterProvider router={router} />
-		</StrictMode>,
-	);
+  ReactDOM.createRoot(root).render(
+    <StrictMode>
+      <RouterProvider router={router} />
+    </StrictMode>,
+  );
 }
