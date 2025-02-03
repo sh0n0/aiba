@@ -7,11 +7,15 @@ class Account < ApplicationRecord
 
   before_create :generate_keys
 
+  def display_name
+    super || name
+  end
+
   private
 
   def generate_keys
     keypair = OpenSSL::PKey::RSA.new(2048)
     self.private_key = keypair.to_pem
-    self.public_key  = keypair.public_key.to_pem
+    self.public_key = keypair.public_key.to_pem
   end
 end

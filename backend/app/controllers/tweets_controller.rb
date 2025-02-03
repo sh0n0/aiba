@@ -13,10 +13,11 @@ class TweetsController < ApplicationController
 
   def create
     @tweet = Tweet.new(tweet_params)
+    account = Account.find(tweet_params[:account_id])
 
     # FIXME
     SampleJob.perform_async("Hello, world!")
-    ActionCable.server.broadcast("timeline/public", { message: "Hello, world!" })
+    ActionCable.server.broadcast("timeline/public", { id: @tweet.id, text: @tweet.text, accountId: account.name, accountName: account.display_name })
 
     if @tweet.save
       render json: @tweet, status: :created, location: @tweet
