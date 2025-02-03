@@ -13,6 +13,7 @@
 	},
 	"dependencies": {
 		"@anycable/web": "^1.0.0",
+		"@radix-ui/react-label": "^2.1.1",
 		"@radix-ui/react-slot": "^1.1.1",
 		"@tanstack/react-router": "^1.98.4",
 		"class-variance-authority": "^0.7.1",
@@ -21,7 +22,8 @@
 		"react": "^18.3.1",
 		"react-dom": "^18.3.1",
 		"tailwind-merge": "^2.6.0",
-		"tailwindcss-animate": "^1.0.7"
+		"tailwindcss-animate": "^1.0.7",
+		"zustand": "^5.0.3"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "1.9.4",
