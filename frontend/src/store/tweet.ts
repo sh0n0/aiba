@@ -6,7 +6,7 @@ export interface TimelineSlice {
   addTweet: (tweet: Tweet) => void;
 }
 
-type Tweet = {
+export type Tweet = {
   id: number;
   text: string;
   accountId: string;
