@@ -7,6 +7,7 @@ export interface UserSlice {
   client: string | null;
   accessToken: string | null;
   setAuth: (uid: string, client: string, accessToken: string) => void;
+  getAuth: () => { uid: string; client: string; accessToken: string };
 }
 
 export const initialUserSlice = {
@@ -21,9 +22,14 @@ export const createUserSlice: StateCreator<
   [["zustand/persist", UserSlice]],
   UserSlice
 > = persist(
-  (set) => ({
+  (set, get) => ({
     ...initialUserSlice,
     setAuth: (uid, client, accessToken) => set({ uid, client, accessToken }),
+    getAuth: () => ({
+      uid: get().uid ?? "",
+      client: get().client ?? "",
+      accessToken: get().accessToken ?? "",
+    }),
   }),
   {
     name: "user",

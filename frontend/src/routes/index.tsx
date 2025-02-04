@@ -1,9 +1,15 @@
+import { postTweetFetcher } from "@/api/tweet.ts";
+import { Button } from "@/components/ui/button.tsx";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { FormField } from "@/components/ui/form.tsx";
+import { Textarea } from "@/components/ui/textarea.tsx";
 import { useAppStore } from "@/store/store.ts";
 import type { Tweet } from "@/store/tweet.ts";
 import { createCable } from "@anycable/web";
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import useSWRMutation from "swr/mutation";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -20,6 +26,8 @@ export const Route = createFileRoute("/")({
 function Index() {
   const timeline = useAppStore((state) => state.timeline);
   const addTweet = useAppStore((state) => state.addTweet);
+  const form = useForm({ defaultValues: { text: "" } });
+  const { trigger, isMutating, error } = useSWRMutation("tweets", postTweetFetcher);
 
   useEffect(() => {
     const cable = createCable("ws://localhost:8080/cable", {
@@ -39,8 +47,24 @@ function Index() {
     };
   }, [addTweet]);
 
+  const onSubmitTweet = async (data: { text: string }) => {
+    const { text } = data;
+    await trigger({ text });
+  };
+
   return (
     <div className="flex h-screen flex-col items-center">
+      <form onSubmit={form.handleSubmit(onSubmitTweet)}>
+        <FormField
+          control={form.control}
+          name="text"
+          render={({ field: { onChange } }) => <Textarea onChange={onChange} />}
+        />
+        <Button type="submit" disabled={isMutating}>
+          {isMutating ? "Posting..." : "Submit"}
+        </Button>
+        {error && <div className="mt-2 text-red-500">Error: {error.message}</div>}
+      </form>
       {timeline.map((tweet) => (
         <Card className="fade-in h-fit min-h-32 w-[600px]" key={tweet.id}>
           <CardHeader>

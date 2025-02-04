@@ -1,4 +1,5 @@
 class TweetsController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_tweet, only: %i[ show destroy ]
 
   def index
@@ -12,8 +13,9 @@ class TweetsController < ApplicationController
   end
 
   def create
-    @tweet = Tweet.new(tweet_params)
-    account = Account.find(tweet_params[:account_id])
+    account_id = current_user.account.id
+    @tweet = Tweet.new(tweet_params.merge(account_id: account_id))
+    account = Account.find(account_id)
 
     # FIXME
     SampleJob.perform_async("Hello, world!")
