@@ -41,6 +41,9 @@ jobs:
       - name: Lint code for consistent style
         run: bin/rubocop -f github
 
+      - name: Set up Database
+        run: bin/rails db:test:prepare
+
       - name: Lint factories
         run: bin/rails factory_bot:lint
 
@@ -52,7 +55,7 @@ jobs:
           DB_PASS: aiba
           DB_HOST: localhost
           DB_PORT: '5432'
-        run: bin/rails db:test:prepare && bundle exec rspec
+        run: bundle exec rspec
 
   frontend:
     defaults:
