@@ -23,6 +23,8 @@ class CompanionsController < ApplicationController
   end
 
   def update
+    render json: @companion.errors, status: :unprocessable_entity unless @companion.editable_by?(current_user.account)
+
     if @companion.update(companion_params)
       render json: @companion
     else

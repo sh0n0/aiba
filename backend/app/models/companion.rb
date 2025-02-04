@@ -4,4 +4,9 @@ class Companion < ApplicationRecord
   validates :name, presence: true
   validates :description, presence: true
   validates :prompt, presence: true
+
+  # @param [Account] account
+  def editable_by?(account)
+    creator == account && published_at.nil?
+  end
 end
