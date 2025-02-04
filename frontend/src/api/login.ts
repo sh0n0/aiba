@@ -1,5 +1,7 @@
-export async function loginFetcher(url: string, { arg }: { arg: { email: string; password: string } }) {
-  const res = await fetch(url, {
+import { API_BASE } from "@/constants/api.ts";
+
+export async function loginFetcher(_: string, { arg }: { arg: { email: string; password: string } }) {
+  const res = await fetch(`${API_BASE}/auth/sign_in`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

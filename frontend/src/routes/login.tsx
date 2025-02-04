@@ -18,8 +18,7 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  // TODO: Use env variable for the URL
-  const { trigger, isMutating, error } = useSWRMutation("http://localhost:3000/auth/sign_in", loginFetcher);
+  const { trigger, isMutating, error } = useSWRMutation("sign_in", loginFetcher);
 
   const onLoginClicked = async () => {
     const { uid, client, accessToken } = await trigger({ email, password });
