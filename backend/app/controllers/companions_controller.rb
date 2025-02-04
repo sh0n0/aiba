@@ -1,4 +1,5 @@
 class CompanionsController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_companion, only: %i[ show update destroy ]
 
   def index
@@ -12,7 +13,7 @@ class CompanionsController < ApplicationController
   end
 
   def create
-    @companion = Companion.new(companion_params)
+    @companion = Companion.new(companion_params.merge(created_by: current_user.account.id))
 
     if @companion.save
       render json: @companion, status: :created, location: @companion
@@ -34,11 +35,12 @@ class CompanionsController < ApplicationController
   end
 
   private
-    def set_companion
-      @companion = Companion.find(params.expect(:id))
-    end
 
-    def companion_params
-      params.expect(companion: [ :description, :prompt, :published_at, :account_id ])
-    end
+  def set_companion
+    @companion = Companion.find(params.expect(:id))
+  end
+
+  def companion_params
+    params.expect(companion: [ :name, :description, :prompt, :published_at, :account_id ])
+  end
 end

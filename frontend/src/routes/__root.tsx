@@ -16,6 +16,9 @@ export const Route = createRootRoute({
           <Link to="/about" className="[&.active]:font-bold">
             About
           </Link>
+          <Link to="/companion" className="[&.active]:font-bold">
+            Companion
+          </Link>
           {accessToken && (
             <Link to={"/"} params={{ logout: true }} onClick={() => clearAll()}>
               Logout

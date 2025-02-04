@@ -3,24 +3,18 @@ import { Button } from "@/components/ui/button.tsx";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { FormField } from "@/components/ui/form.tsx";
 import { Textarea } from "@/components/ui/textarea.tsx";
+import { redirectToLoginIfUnauthorized } from "@/lib/utils.ts";
 import { useAppStore } from "@/store/store.ts";
 import type { Tweet } from "@/store/tweet.ts";
 import { createCable } from "@anycable/web";
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import useSWRMutation from "swr/mutation";
 
 export const Route = createFileRoute("/")({
   component: Index,
-  beforeLoad: () => {
-    const accessToken = useAppStore.getState().accessToken;
-    if (!accessToken) {
-      throw redirect({
-        to: "/login",
-      });
-    }
-  },
+  beforeLoad: () => redirectToLoginIfUnauthorized(),
 });
 
 function Index() {
