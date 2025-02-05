@@ -1,6 +1,6 @@
-require "Singleton"
+require "singleton"
 
-class OpenaiApi
+class Ai::OpenaiApi
   include Singleton
 
   def initialize

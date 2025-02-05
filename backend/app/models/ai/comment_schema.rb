@@ -1,4 +1,4 @@
-class CommentSchema < BaseSchema
+class Ai::CommentSchema < Ai::BaseSchema
   def initialize
     super do
       string :comment

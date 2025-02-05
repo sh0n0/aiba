@@ -1,4 +1,4 @@
-class BaseSchema
+class Ai::BaseSchema
   MAX_OBJECT_PROPERTIES = 100
   MAX_NESTING_DEPTH = 5
 
@@ -49,7 +49,7 @@ class BaseSchema
   def object(name, &block)
     properties = {}
     required = []
-    BaseSchema.new.tap do |s|
+    Ai::BaseSchema.new.tap do |s|
       s.instance_eval(&block)
       properties = s.instance_variable_get(:@schema)[:properties]
       required = s.instance_variable_get(:@schema)[:required]

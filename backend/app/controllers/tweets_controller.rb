@@ -18,7 +18,7 @@ class TweetsController < ApplicationController
     account = Account.find(account_id)
 
     # FIXME
-    # OpenaiApi.instance.make_sentences("you are a good person", @tweet.text)
+    # Ai::OpenaiApi.instance.make_sentences("you are a good person", @tweet.text)
     SampleJob.perform_async("Hello, world!")
     ActionCable.server.broadcast("timeline/public", { id: @tweet.id, text: @tweet.text, accountId: account.name, accountName: account.display_name })
 
