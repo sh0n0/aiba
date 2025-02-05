@@ -27,6 +27,7 @@ gem "devise"
 gem "devise_token_auth"
 gem "anycable-rails", "~> 1.5"
 gem "sidekiq", "~> 7.3"
+gem "ruby-openai"
 
 group :development do
   gem "letter_opener_web"
@@ -47,4 +48,6 @@ group :development, :test do
 
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
+
+  gem "dotenv-rails"
 end
