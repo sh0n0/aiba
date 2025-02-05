@@ -8,6 +8,8 @@ class Companion < ApplicationRecord
   validates :description, presence: true
   validates :prompt, presence: true
 
+  scope :published, -> { where.not(published_at: nil) }
+
   # @param [Account] account
   def editable_by?(account)
     creator == account && published_at.nil?

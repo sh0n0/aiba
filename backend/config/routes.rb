@@ -1,8 +1,11 @@
 require "sidekiq/web"
 
 Rails.application.routes.draw do
-  resources :companions
+  resources :companions do
+    get :owned, on: :collection
+  end
   resources :tweets
+
   mount LetterOpenerWeb::Engine, at: "letter_opener" if Rails.env.development?
   mount Sidekiq::Web => "/sidekiq" # FIXME: add authentication
 

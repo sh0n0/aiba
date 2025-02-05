@@ -21,3 +21,39 @@ export async function createCompanionFetcher(
   }
   return true;
 }
+
+type OpenCompanionResponse = {
+  id: number;
+  name: string;
+  description: string;
+};
+
+export async function fetchOpenCompanionsFetcher(_: string): Promise<OpenCompanionResponse[]> {
+  const { uid, client, accessToken } = useAppStore.getState().getAuth();
+  const res = await fetch(`${API_BASE}/companions`, {
+    headers: {
+      uid,
+      client,
+      "access-token": accessToken,
+    },
+  });
+  if (!res.ok) {
+    throw new Error("Fetch open companions failed");
+  }
+  return res.json();
+}
+
+export async function fetchOwnedCompanionsFetcher(_: string): Promise<OpenCompanionResponse[]> {
+  const { uid, client, accessToken } = useAppStore.getState().getAuth();
+  const res = await fetch(`${API_BASE}/companions/owned`, {
+    headers: {
+      uid,
+      client,
+      "access-token": accessToken,
+    },
+  });
+  if (!res.ok) {
+    throw new Error("Fetch owned companions failed");
+  }
+  return res.json();
+}
