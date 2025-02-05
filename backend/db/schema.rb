@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_01_30_165544) do
+ActiveRecord::Schema[8.0].define(version: 2025_02_05_062203) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -22,6 +22,17 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_30_165544) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["name"], name: "index_accounts_on_name", unique: true
+  end
+
+  create_table "companion_ownerships", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.bigint "companion_id", null: false
+    t.boolean "is_default", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id", "companion_id"], name: "index_companion_ownerships_on_account_id_and_companion_id", unique: true
+    t.index ["account_id"], name: "index_companion_ownerships_on_account_id", unique: true, where: "(is_default = true)"
+    t.index ["companion_id"], name: "index_companion_ownerships_on_companion_id"
   end
 
   create_table "companions", force: :cascade do |t|
@@ -66,6 +77,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_30_165544) do
     t.index ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true
   end
 
+  add_foreign_key "companion_ownerships", "accounts"
+  add_foreign_key "companion_ownerships", "companions"
   add_foreign_key "companions", "accounts", column: "created_by"
   add_foreign_key "tweets", "accounts"
   add_foreign_key "users", "accounts"

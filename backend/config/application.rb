@@ -43,5 +43,9 @@ module Backend
 
     # Configuration for the Sidekiq dashboard
     config.middleware.use ActionDispatch::Session::CookieStore, key: "_session"
+
+    config.generators do |g|
+      g.test_framework :rspec
+    end
   end
 end

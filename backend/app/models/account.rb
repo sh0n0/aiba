@@ -1,7 +1,10 @@
 class Account < ApplicationRecord
   has_one :user, inverse_of: :account
   has_many :tweets
-  has_many :companions
+  has_many :created_companions, class_name: "Companion", foreign_key: :created_by
+
+  has_many :companion_ownerships
+  has_many :owned_companions, through: :companion_ownerships, source: :companion
 
   validates :name, presence: true, uniqueness: true
 
