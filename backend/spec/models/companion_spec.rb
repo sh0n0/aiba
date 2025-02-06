@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 require "rails_helper"
 
 RSpec.describe Companion do
@@ -24,6 +22,16 @@ RSpec.describe Companion do
       account = build(:account)
       companion = build(:companion, creator: account, published_at: Time.now)
       expect(companion.editable_by?(account)).to be false
+    end
+  end
+
+  context "when making a comment", :vcr do
+    it "creates a new comment" do
+      companion = build(:companion)
+      tweet = build(:tweet)
+
+      comment = companion.make_comment(tweet)
+      expect(comment).to be_an_instance_of(CompanionComment)
     end
   end
 end

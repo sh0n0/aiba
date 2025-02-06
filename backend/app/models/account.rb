@@ -14,6 +14,11 @@ class Account < ApplicationRecord
     super || name
   end
 
+  # @return [Companion, nil]
+  def default_companion
+    owned_companions.find_by(companion_ownerships: { is_default: true })
+  end
+
   private
 
   def generate_keys

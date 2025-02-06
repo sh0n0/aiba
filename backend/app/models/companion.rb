@@ -14,4 +14,10 @@ class Companion < ApplicationRecord
   def editable_by?(account)
     creator == account && published_at.nil?
   end
+
+  # @param [Tweet] tweet
+  def make_comment(tweet)
+    text = Ai::OpenaiApi.instance.make_sentences(prompt, tweet.text)
+    CompanionComment.create(text: text, companion: self, tweet: tweet)
+  end
 end

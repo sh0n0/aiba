@@ -25,7 +25,7 @@ class Ai::OpenaiApi
       ],
       response_format: {
         type: "json_schema",
-        json_schema: CommentSchema.new.to_hash
+        json_schema: Ai::CommentSchema.new.to_hash
       }
     })
     json = JSON.parse(response["choices"].first["message"]["content"])

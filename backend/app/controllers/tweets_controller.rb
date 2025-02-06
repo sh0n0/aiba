@@ -13,19 +13,17 @@ class TweetsController < ApplicationController
   end
 
   def create
-    account_id = current_user.account.id
-    @tweet = Tweet.new(tweet_params.merge(account_id: account_id))
-    account = Account.find(account_id)
+    account = current_user.account
+    tweet = Tweet.new(tweet_params.merge(account: account))
 
-    # FIXME
-    # Ai::OpenaiApi.instance.make_sentences("you are a good person", @tweet.text)
-    SampleJob.perform_async("Hello, world!")
-    ActionCable.server.broadcast("timeline/public", { id: @tweet.id, text: @tweet.text, accountId: account.name, accountName: account.display_name })
+    if tweet.save
+      companion = account.default_companion
+      MakeCompanionCommentJob.perform_async(companion.id, tweet.id) if companion.present?
+      BroadcastTweetJob.perform_async(tweet.id)
 
-    if @tweet.save
-      render json: @tweet, status: :created, location: @tweet
+      render json: tweet, status: :created, location: tweet
     else
-      render json: @tweet.errors, status: :unprocessable_entity
+      render json: tweet.errors, status: :unprocessable_entity
     end
   end
 
@@ -40,6 +38,6 @@ class TweetsController < ApplicationController
   end
 
   def tweet_params
-    params.expect(tweet: [ :text, :account_id ])
+    params.expect(tweet: [ :text ])
   end
 end
