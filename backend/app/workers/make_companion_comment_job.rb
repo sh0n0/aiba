@@ -8,6 +8,6 @@ class MakeCompanionCommentJob
     tweet = Tweet.find(tweet_id)
 
     comment = companion.make_comment(tweet)
-    BroadcastCompanionCommentJob.perform_async(comment.id)
+    BroadcastTweetAndCompanionCommentJob.perform_async(tweet_id, comment.id)
   end
 end

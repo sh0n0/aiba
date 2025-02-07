@@ -19,7 +19,6 @@ class TweetsController < ApplicationController
     if tweet.save
       companion = account.default_companion
       MakeCompanionCommentJob.perform_async(companion.id, tweet.id) if companion.present?
-      BroadcastTweetJob.perform_async(tweet.id)
 
       render json: tweet, status: :created, location: tweet
     else

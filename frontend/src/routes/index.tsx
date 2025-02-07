@@ -5,7 +5,7 @@ import { FormField } from "@/components/ui/form.tsx";
 import { Textarea } from "@/components/ui/textarea.tsx";
 import { redirectToLoginIfUnauthorized } from "@/lib/utils.ts";
 import { useAppStore } from "@/store/store.ts";
-import type { Tweet } from "@/store/tweet.ts";
+import type { TweetWithComment } from "@/store/tweet.ts";
 import { createCable } from "@anycable/web";
 import { Link, createFileRoute } from "@tanstack/react-router";
 import { useEffect } from "react";
@@ -33,7 +33,7 @@ function Index() {
     publicChannel.on("message", (message) => {
       console.log("Received message:", message);
 
-      addTweet(message as Tweet);
+      addTweet(message as TweetWithComment);
     });
 
     return () => {
@@ -59,19 +59,24 @@ function Index() {
         </Button>
         {error && <div className="mt-2 text-red-500">Error: {error.message}</div>}
       </form>
-      {timeline.map((tweet) => (
-        <Card className="fade-in h-fit min-h-32 w-[600px]" key={tweet.id}>
+      {timeline.map((tweetWithComment) => (
+        <Card className="fade-in h-fit min-h-32 w-[600px]" key={tweetWithComment.tweet.id}>
           <CardHeader>
             <div className="flex items-center space-x-2">
               <CardTitle>
-                <Link to={"/$username"} params={{ username: `@${tweet.accountId}` }}>
-                  {tweet.accountName}
+                <Link to={"/$accountName"} params={{ accountName: `@${tweetWithComment.tweet.accountId}` }}>
+                  {tweetWithComment.tweet.accountName}
                 </Link>
               </CardTitle>
-              <span className="text-gray-500">@{tweet.accountId}</span>
+              <span className="text-gray-500">@{tweetWithComment.tweet.accountId}</span>
             </div>
           </CardHeader>
-          <CardContent>{tweet.text}</CardContent>
+          <CardContent>
+            <p>{tweetWithComment.tweet.text}</p>
+            <br />
+            <p className="text-gray-500">{tweetWithComment.companionComment.companionName}</p>
+            <p className="text-gray-500">{tweetWithComment.companionComment.text}</p>
+          </CardContent>
         </Card>
       ))}
     </div>

@@ -2,15 +2,23 @@ import type { State } from "@/store/store.ts";
 import type { StateCreator } from "zustand/vanilla";
 
 export interface TimelineSlice {
-  timeline: Tweet[];
-  addTweet: (tweet: Tweet) => void;
+  timeline: TweetWithComment[];
+  addTweet: (tweet: TweetWithComment) => void;
 }
 
-export type Tweet = {
-  id: number;
-  text: string;
-  accountId: string;
-  accountName: string;
+export type TweetWithComment = {
+  tweet: {
+    id: number;
+    text: string;
+    accountId: string;
+    accountName: string;
+  };
+  companionComment: {
+    id: number;
+    text: string;
+    companionId: number;
+    companionName: string;
+  };
 };
 
 export const initialTimelineSlice = {
@@ -19,5 +27,5 @@ export const initialTimelineSlice = {
 
 export const createTimelineSlice: StateCreator<State, [["zustand/devtools", never]], [], TimelineSlice> = (set) => ({
   ...initialTimelineSlice,
-  addTweet: (tweet) => set((state) => ({ timeline: [tweet, ...state.timeline] })),
+  addTweet: (tweetWithComment) => set((state) => ({ timeline: [tweetWithComment, ...state.timeline] })),
 });
