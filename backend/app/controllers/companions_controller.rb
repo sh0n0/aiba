@@ -1,6 +1,6 @@
 class CompanionsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_companion, only: %i[ show update destroy publish ]
+  before_action :set_companion, only: %i[ show update destroy ]
 
   def index
     companions = Companion.published

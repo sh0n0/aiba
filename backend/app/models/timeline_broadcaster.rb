@@ -6,7 +6,7 @@ class TimelineBroadcaster
     ActionCable.server.broadcast("timeline/public", {
       id: tweet.id,
       text: tweet.text,
-      accountId: account.id,
+      accountId: account.name,
       accountName: account.display_name
     })
   end
