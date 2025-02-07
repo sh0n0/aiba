@@ -6,6 +6,7 @@ export async function createCompanionFetcher(
   { arg }: { arg: { name: string; description: string; prompt: string } },
 ) {
   const { uid, client, accessToken } = useAppStore.getState().getAuth();
+
   const res = await fetch(`${API_BASE}/companions`, {
     method: "POST",
     headers: {
@@ -30,6 +31,7 @@ type OpenCompanionResponse = {
 
 export async function fetchOpenCompanionsFetcher(_: string): Promise<OpenCompanionResponse[]> {
   const { uid, client, accessToken } = useAppStore.getState().getAuth();
+
   const res = await fetch(`${API_BASE}/companions`, {
     headers: {
       uid,
@@ -45,6 +47,7 @@ export async function fetchOpenCompanionsFetcher(_: string): Promise<OpenCompani
 
 export async function fetchOwnedCompanionsFetcher(_: string): Promise<OpenCompanionResponse[]> {
   const { uid, client, accessToken } = useAppStore.getState().getAuth();
+
   const res = await fetch(`${API_BASE}/companions/owned`, {
     headers: {
       uid,

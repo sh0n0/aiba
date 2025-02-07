@@ -28,6 +28,7 @@ gem "devise_token_auth"
 gem "anycable-rails", "~> 1.5"
 gem "sidekiq", "~> 7.3"
 gem "ruby-openai"
+gem "active_model_serializers"
 
 group :development do
   gem "letter_opener_web"

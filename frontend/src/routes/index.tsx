@@ -7,7 +7,7 @@ import { redirectToLoginIfUnauthorized } from "@/lib/utils.ts";
 import { useAppStore } from "@/store/store.ts";
 import type { Tweet } from "@/store/tweet.ts";
 import { createCable } from "@anycable/web";
-import { createFileRoute } from "@tanstack/react-router";
+import { Link, createFileRoute } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import useSWRMutation from "swr/mutation";
@@ -63,7 +63,11 @@ function Index() {
         <Card className="fade-in h-fit min-h-32 w-[600px]" key={tweet.id}>
           <CardHeader>
             <div className="flex items-center space-x-2">
-              <CardTitle>{tweet.accountName}</CardTitle>
+              <CardTitle>
+                <Link to={"/$username"} params={{ username: `@${tweet.accountId}` }}>
+                  {tweet.accountName}
+                </Link>
+              </CardTitle>
               <span className="text-gray-500">@{tweet.accountId}</span>
             </div>
           </CardHeader>
