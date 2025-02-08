@@ -14,8 +14,9 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as LoginImport } from './routes/login'
 import { Route as CompanionImport } from './routes/companion'
 import { Route as AboutImport } from './routes/about'
-import { Route as AccountNameImport } from './routes/$accountName'
 import { Route as IndexImport } from './routes/index'
+import { Route as AccountNameIndexImport } from './routes/$accountName/index'
+import { Route as AccountNameCompanionNameImport } from './routes/$accountName/$companionName'
 
 // Create/Update Routes
 
@@ -37,15 +38,21 @@ const AboutRoute = AboutImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const AccountNameRoute = AccountNameImport.update({
-  id: '/$accountName',
-  path: '/$accountName',
-  getParentRoute: () => rootRoute,
-} as any)
-
 const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const AccountNameIndexRoute = AccountNameIndexImport.update({
+  id: '/$accountName/',
+  path: '/$accountName/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const AccountNameCompanionNameRoute = AccountNameCompanionNameImport.update({
+  id: '/$accountName/$companionName',
+  path: '/$accountName/$companionName',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -58,13 +65,6 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexImport
-      parentRoute: typeof rootRoute
-    }
-    '/$accountName': {
-      id: '/$accountName'
-      path: '/$accountName'
-      fullPath: '/$accountName'
-      preLoaderRoute: typeof AccountNameImport
       parentRoute: typeof rootRoute
     }
     '/about': {
@@ -88,6 +88,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginImport
       parentRoute: typeof rootRoute
     }
+    '/$accountName/$companionName': {
+      id: '/$accountName/$companionName'
+      path: '/$accountName/$companionName'
+      fullPath: '/$accountName/$companionName'
+      preLoaderRoute: typeof AccountNameCompanionNameImport
+      parentRoute: typeof rootRoute
+    }
+    '/$accountName/': {
+      id: '/$accountName/'
+      path: '/$accountName'
+      fullPath: '/$accountName'
+      preLoaderRoute: typeof AccountNameIndexImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -95,52 +109,76 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/$accountName': typeof AccountNameRoute
   '/about': typeof AboutRoute
   '/companion': typeof CompanionRoute
   '/login': typeof LoginRoute
+  '/$accountName/$companionName': typeof AccountNameCompanionNameRoute
+  '/$accountName': typeof AccountNameIndexRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/$accountName': typeof AccountNameRoute
   '/about': typeof AboutRoute
   '/companion': typeof CompanionRoute
   '/login': typeof LoginRoute
+  '/$accountName/$companionName': typeof AccountNameCompanionNameRoute
+  '/$accountName': typeof AccountNameIndexRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
-  '/$accountName': typeof AccountNameRoute
   '/about': typeof AboutRoute
   '/companion': typeof CompanionRoute
   '/login': typeof LoginRoute
+  '/$accountName/$companionName': typeof AccountNameCompanionNameRoute
+  '/$accountName/': typeof AccountNameIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/$accountName' | '/about' | '/companion' | '/login'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/companion'
+    | '/login'
+    | '/$accountName/$companionName'
+    | '/$accountName'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/$accountName' | '/about' | '/companion' | '/login'
-  id: '__root__' | '/' | '/$accountName' | '/about' | '/companion' | '/login'
+  to:
+    | '/'
+    | '/about'
+    | '/companion'
+    | '/login'
+    | '/$accountName/$companionName'
+    | '/$accountName'
+  id:
+    | '__root__'
+    | '/'
+    | '/about'
+    | '/companion'
+    | '/login'
+    | '/$accountName/$companionName'
+    | '/$accountName/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AccountNameRoute: typeof AccountNameRoute
   AboutRoute: typeof AboutRoute
   CompanionRoute: typeof CompanionRoute
   LoginRoute: typeof LoginRoute
+  AccountNameCompanionNameRoute: typeof AccountNameCompanionNameRoute
+  AccountNameIndexRoute: typeof AccountNameIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AccountNameRoute: AccountNameRoute,
   AboutRoute: AboutRoute,
   CompanionRoute: CompanionRoute,
   LoginRoute: LoginRoute,
+  AccountNameCompanionNameRoute: AccountNameCompanionNameRoute,
+  AccountNameIndexRoute: AccountNameIndexRoute,
 }
 
 export const routeTree = rootRoute
@@ -154,17 +192,15 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/$accountName",
         "/about",
         "/companion",
-        "/login"
+        "/login",
+        "/$accountName/$companionName",
+        "/$accountName/"
       ]
     },
     "/": {
       "filePath": "index.tsx"
-    },
-    "/$accountName": {
-      "filePath": "$accountName.tsx"
     },
     "/about": {
       "filePath": "about.tsx"
@@ -174,6 +210,12 @@ export const routeTree = rootRoute
     },
     "/login": {
       "filePath": "login.tsx"
+    },
+    "/$accountName/$companionName": {
+      "filePath": "$accountName/$companionName.tsx"
+    },
+    "/$accountName/": {
+      "filePath": "$accountName/index.tsx"
     }
   }
 }

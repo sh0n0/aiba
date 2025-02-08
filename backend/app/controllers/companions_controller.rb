@@ -1,6 +1,6 @@
 class CompanionsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_companion, only: %i[ show update destroy ]
+  before_action :set_companion, only: %i[ update destroy ]
 
   def index
     companions = Companion.published
@@ -12,7 +12,14 @@ class CompanionsController < ApplicationController
   end
 
   def show
-    render json: @companion
+    current_user_account = current_user.account
+    account = Account.find_by!(name: params[:account_name])
+
+    companion = Companion
+    companion = companion.published unless account == current_user_account
+    companion = companion.created_by(account).with_name(params[:companion_name]).first!
+
+    render json: companion, serializer: CompanionSerializer, account: current_user_account
   end
 
   def create

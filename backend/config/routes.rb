@@ -1,9 +1,11 @@
 require "sidekiq/web"
 
 Rails.application.routes.draw do
-  resources :companions do
+  resources :companions, only: [ :index, :create, :update, :destroy ] do
     get :owned, on: :collection
   end
+  get "companions/:account_name/:companion_name", to: "companions#show"
+
   resources :tweets
   resources :account
 

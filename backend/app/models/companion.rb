@@ -1,5 +1,5 @@
 class Companion < ApplicationRecord
-  belongs_to :creator, class_name: "Account", foreign_key: "created_by"
+  belongs_to :creator, class_name: "Account", foreign_key: :created_by
 
   has_many :companion_ownerships
   has_many :owners, through: :companion_ownerships, source: :account
@@ -9,6 +9,8 @@ class Companion < ApplicationRecord
   validates :prompt, presence: true
 
   scope :published, -> { where.not(published_at: nil) }
+  scope :with_name, ->(name) { where(name: name) }
+  scope :created_by, ->(account) { where(creator: account) }
 
   # @param [Account] account
   def editable_by?(account)

@@ -10,6 +10,25 @@ RSpec.describe Companion do
     end
   end
 
+  describe ".with_name" do
+    let!(:companion_1) { create(:companion, name: "Test Companion") }
+    let!(:companion_2) { create(:companion, name: "Another Companion") }
+
+    it "returns the companion with the given name" do
+      expect(Companion.with_name("Test Companion")).to contain_exactly(companion_1)
+    end
+  end
+
+  describe ".created_by" do
+    let!(:account) { create(:account) }
+    let!(:companion_1) { create(:companion, creator: account) }
+    let!(:companion_2) { create(:companion, creator: build(:account)) }
+
+    it "returns the companion created by the given account" do
+      expect(Companion.created_by(account)).to contain_exactly(companion_1)
+    end
+  end
+
   context "when created by the same user" do
     it "is editable" do
       account = build(:account)

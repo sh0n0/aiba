@@ -60,3 +60,33 @@ export async function fetchOwnedCompanionsFetcher(_: string): Promise<OpenCompan
   }
   return res.json();
 }
+
+type CompanionDetailResponse = {
+  name: string;
+  description: string;
+  prompt: string;
+  publishedAt: string;
+  creator: {
+    name: string;
+    displayName: string;
+  };
+};
+
+export async function fetchCompanionDetailFetcher(
+  _: string,
+  { arg }: { arg: { accountName: string; companionName: string } },
+): Promise<CompanionDetailResponse> {
+  const { uid, client, accessToken } = useAppStore.getState().getAuth();
+
+  const res = await fetch(`${API_BASE}/companions/${arg.accountName}/${arg.companionName}`, {
+    headers: {
+      uid,
+      client,
+      "access-token": accessToken,
+    },
+  });
+  if (!res.ok) {
+    throw new Error("Fetch companion failed");
+  }
+  return res.json();
+}
