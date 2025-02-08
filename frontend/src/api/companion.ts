@@ -23,13 +23,18 @@ export async function createCompanionFetcher(
   return true;
 }
 
-type OpenCompanionResponse = {
+type CompanionResponse = {
   id: number;
   name: string;
   description: string;
+  creator: {
+    name: string;
+    displayName: string;
+    createdAt: string;
+  };
 };
 
-export async function fetchOpenCompanionsFetcher(_: string): Promise<OpenCompanionResponse[]> {
+export async function fetchOpenCompanionsFetcher(_: string): Promise<CompanionResponse[]> {
   const { uid, client, accessToken } = useAppStore.getState().getAuth();
 
   const res = await fetch(`${API_BASE}/companions`, {
@@ -45,7 +50,7 @@ export async function fetchOpenCompanionsFetcher(_: string): Promise<OpenCompani
   return res.json();
 }
 
-export async function fetchOwnedCompanionsFetcher(_: string): Promise<OpenCompanionResponse[]> {
+export async function fetchOwnedCompanionsFetcher(_: string): Promise<CompanionResponse[]> {
   const { uid, client, accessToken } = useAppStore.getState().getAuth();
 
   const res = await fetch(`${API_BASE}/companions/owned`, {

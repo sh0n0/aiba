@@ -4,11 +4,11 @@ class CompanionsController < ApplicationController
 
   def index
     companions = Companion.published
-    render json: companions
+    render json: companions, each_serializer: CompanionSerializer, account: current_user.account
   end
 
   def owned
-    render json: current_user.account.owned_companions
+    render json: current_user.account.owned_companions, each_serializer: CompanionSerializer, account: current_user.account
   end
 
   def show
@@ -19,7 +19,7 @@ class CompanionsController < ApplicationController
     companion = companion.published unless account == current_user_account
     companion = companion.created_by(account).with_name(params[:companion_name]).first!
 
-    render json: companion, serializer: CompanionSerializer, account: current_user_account
+    render json: companion, serializer: CompanionDetailSerializer, account: current_user_account
   end
 
   def create

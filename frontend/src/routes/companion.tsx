@@ -6,7 +6,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs.tsx";
 import { Textarea } from "@/components/ui/textarea.tsx";
 import { redirectToLoginIfUnauthorized } from "@/lib/utils.ts";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
 import useSWR from "swr";
 import useSWRMutation from "swr/mutation";
@@ -57,11 +57,7 @@ const CreateCompanionForm = () => {
   });
   const { trigger, isMutating, error } = useSWRMutation("companions", createCompanionFetcher);
 
-  const onSubmitCompanion = async (data: {
-    name: string;
-    description: string;
-    prompt: string;
-  }) => {
+  const onSubmitCompanion = async (data: { name: string; description: string; prompt: string }) => {
     const { name, description, prompt } = data;
     await trigger({ name, description, prompt });
   };
@@ -103,9 +99,15 @@ type Companion = {
   id: number;
   name: string;
   description: string;
+  creator: {
+    name: string;
+    displayName: string;
+    createdAt: string;
+  };
 };
 
 const CompanionList = ({ companions }: { companions: Companion[] }) => {
+  const navigate = useNavigate();
   return (
     <Table>
       <TableHeader>
@@ -116,7 +118,10 @@ const CompanionList = ({ companions }: { companions: Companion[] }) => {
       </TableHeader>
       <TableBody>
         {companions.map((companion) => (
-          <TableRow key={companion.id} onClick={() => alert(`Clicked ${companion.name}`)}>
+          <TableRow
+            key={companion.id}
+            onClick={async () => await navigate({ to: `/@${companion.creator.name}/${companion.name}` })}
+          >
             <TableCell>{companion.name}</TableCell>
             <TableCell>{companion.description}</TableCell>
           </TableRow>
