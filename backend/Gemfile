@@ -29,6 +29,7 @@ gem "anycable-rails", "~> 1.5"
 gem "sidekiq", "~> 7.3"
 gem "ruby-openai"
 gem "active_model_serializers"
+gem "pagy", "~> 9.3"
 
 group :development do
   gem "letter_opener_web"

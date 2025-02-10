@@ -7,7 +7,9 @@ Rails.application.routes.draw do
   get "companions/:account_name/:companion_name", to: "companions#show"
 
   resources :tweets
-  resources :account
+  resources :account, param: :name do
+    get :tweets, on: :member
+  end
 
   mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.development?
   mount Sidekiq::Web => "/sidekiq" # FIXME: add authentication

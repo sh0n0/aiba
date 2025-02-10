@@ -6,17 +6,21 @@ class TimelineBroadcaster
     companion = companion_comment.companion
 
     ActionCable.server.broadcast("timeline/public", {
-      tweet: {
-        id: tweet.id,
-        text: tweet.text,
-        accountId: account.name,
-        accountName: account.display_name
-      },
+      id: tweet.id,
+      text: tweet.text,
       companionComment: {
         id: companion_comment.id,
         text: companion_comment.text,
-        companionId: companion.id,
-        companionName: companion.name
+        companion: {
+          name: companion.name,
+          creator: {
+            name: companion.creator.name
+          }
+        }
+      },
+      account: {
+        name: account.name,
+        displayName: account.display_name
       }
     })
   end

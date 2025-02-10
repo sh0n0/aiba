@@ -21,3 +21,32 @@ export async function accountFetcher(_: string, { arg }: { arg: { name: string }
   }
   return res.json();
 }
+
+export type TweetResponse = {
+  id: number;
+  text: string;
+  companionComment: {
+    text: string;
+    companion: {
+      name: string;
+      creator: {
+        name: string;
+      };
+    };
+  };
+  account: {
+    name: string;
+    displayName: string;
+  };
+};
+
+export const ACCOUNT_TWEET_PAGE_SIZE = 10;
+
+export async function accountTweetsFetcher(url: string): Promise<TweetResponse[]> {
+  const res = await fetch(url, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  return await res.json();
+}

@@ -3,6 +3,7 @@ class Companion < ApplicationRecord
 
   has_many :companion_ownerships
   has_many :owners, through: :companion_ownerships, source: :account
+  has_many :companion_comments
 
   validates :name, presence: true
   validates :description, presence: true
