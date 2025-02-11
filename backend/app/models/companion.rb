@@ -4,6 +4,7 @@ class Companion < ApplicationRecord
   has_many :companion_ownerships
   has_many :owners, through: :companion_ownerships, source: :account
   has_many :companion_comments
+  has_many :companion_tools
 
   validates :name, presence: true
   validates :description, presence: true
@@ -20,7 +21,7 @@ class Companion < ApplicationRecord
 
   # @param [Tweet] tweet
   def make_comment(tweet)
-    text = Ai::OpenaiApi.instance.make_sentences(prompt, tweet.text)
+    text = Ai::OpenaiApi.instance.generate_sentences(prompt, tweet.text, companion_tools)
     CompanionComment.create(text: text, companion: self, tweet: tweet)
   end
 end

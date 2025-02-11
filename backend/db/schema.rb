@@ -10,9 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_02_06_044017) do
+ActiveRecord::Schema[8.0].define(version: 2025_02_11_063416) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  # Custom types defined in this database.
+  # Note that some types may not work with other database engines. Be careful if changing database.
+  create_enum "param_type", ["string", "number", "array", "boolean"]
 
   create_table "accounts", force: :cascade do |t|
     t.string "name", null: false
@@ -43,6 +47,27 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_06_044017) do
     t.index ["account_id", "companion_id"], name: "index_companion_ownerships_on_account_id_and_companion_id", unique: true
     t.index ["account_id"], name: "index_companion_ownerships_on_account_id", unique: true, where: "(is_default = true)"
     t.index ["companion_id"], name: "index_companion_ownerships_on_companion_id"
+  end
+
+  create_table "companion_tool_params", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "description", null: false
+    t.enum "param_type", null: false, enum_type: "param_type"
+    t.bigint "companion_tool_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["companion_tool_id"], name: "index_companion_tool_params_on_companion_tool_id"
+  end
+
+  create_table "companion_tools", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "description", null: false
+    t.string "url", null: false
+    t.bigint "companion_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["companion_id"], name: "index_companion_tools_on_companion_id"
+    t.index ["name", "companion_id"], name: "index_companion_tools_on_name_and_companion_id", unique: true
   end
 
   create_table "companions", force: :cascade do |t|
@@ -91,6 +116,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_06_044017) do
   add_foreign_key "companion_comments", "tweets"
   add_foreign_key "companion_ownerships", "accounts"
   add_foreign_key "companion_ownerships", "companions"
+  add_foreign_key "companion_tool_params", "companion_tools"
+  add_foreign_key "companion_tools", "companions"
   add_foreign_key "companions", "accounts", column: "created_by"
   add_foreign_key "tweets", "accounts"
   add_foreign_key "users", "accounts"

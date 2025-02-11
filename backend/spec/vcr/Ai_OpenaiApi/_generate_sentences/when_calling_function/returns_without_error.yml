@@ -1,0 +1,242 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://api.openai.com/v1/chat/completions
+    body:
+      encoding: UTF-8
+      string: '{"model":"gpt-4o-mini","messages":[{"role":"system","content":"You
+        are an assistant."},{"role":"user","content":"How is the weather in New York?"}],"response_format":{"type":"json_schema","json_schema":{"name":"commentschema","description":"Schema
+        for the structured response","schema":{"type":"object","properties":{"comment":{"type":"string"}},"required":["comment"],"additionalProperties":false,"strict":true,"$defs":{}}}},"tools":[{"type":"function","function":{"name":"get_weather","description":"Get
+        the weather in a city","parameters":{"type":"object","properties":{"city":{"type":"string"}}}}}]}'
+    headers:
+      Content-Type:
+      - application/json
+      Authorization:
+      - Bearer <OPENAI_ACCESS_TOKEN>
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 11 Feb 2025 11:56:57 GMT
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      Access-Control-Expose-Headers:
+      - X-Request-ID
+      Openai-Organization:
+      - user-zqyksmm2ivzciij7kssr3fns
+      Openai-Processing-Ms:
+      - '382'
+      Openai-Version:
+      - '2020-10-01'
+      X-Ratelimit-Limit-Requests:
+      - '10000'
+      X-Ratelimit-Limit-Tokens:
+      - '200000'
+      X-Ratelimit-Remaining-Requests:
+      - '9998'
+      X-Ratelimit-Remaining-Tokens:
+      - '199968'
+      X-Ratelimit-Reset-Requests:
+      - 13.547s
+      X-Ratelimit-Reset-Tokens:
+      - 9ms
+      X-Request-Id:
+      - req_9b7341af0f83b418236fd1ebc7d183ea
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains; preload
+      Cf-Cache-Status:
+      - DYNAMIC
+      Set-Cookie:
+      - __cf_bm=jIVFKAJ0f2ciSVWxfE0o2P2JQb_Tb6q0HCJnm4YHySI-1739275017-1.0.1.1-xRXVfkOgbNEZXrgZecd32_W2.o55ujhhJgFr17OsxcVV18T17W6LCjF.4.onE5LbtI8MXsueP.pTSPml4El6fQ;
+        path=/; expires=Tue, 11-Feb-25 12:26:57 GMT; domain=.api.openai.com; HttpOnly;
+        Secure; SameSite=None
+      - _cfuvid=YDV_FVI0sKNgwlxF1_hxOpS3wB327gAomQ3SL7_yF.U-1739275017263-0.0.1.1-604800000;
+        path=/; domain=.api.openai.com; HttpOnly; Secure; SameSite=None
+      X-Content-Type-Options:
+      - nosniff
+      Server:
+      - cloudflare
+      Cf-Ray:
+      - 910428964dcaeb94-NRT
+      Alt-Svc:
+      - h3=":443"; ma=86400
+    body:
+      encoding: ASCII-8BIT
+      string: |
+        {
+          "id": "chatcmpl-AzjAmyEdUtbln35SHhXQBvHdW5C0k",
+          "object": "chat.completion",
+          "created": 1739275016,
+          "model": "gpt-4o-mini-2024-07-18",
+          "choices": [
+            {
+              "index": 0,
+              "message": {
+                "role": "assistant",
+                "content": null,
+                "tool_calls": [
+                  {
+                    "id": "call_xfTWGarbO4vnCkXaLU2YDzWG",
+                    "type": "function",
+                    "function": {
+                      "name": "get_weather",
+                      "arguments": "{\"city\":\"New York\"}"
+                    }
+                  }
+                ],
+                "refusal": null
+              },
+              "logprobs": null,
+              "finish_reason": "tool_calls"
+            }
+          ],
+          "usage": {
+            "prompt_tokens": 96,
+            "completion_tokens": 16,
+            "total_tokens": 112,
+            "prompt_tokens_details": {
+              "cached_tokens": 0,
+              "audio_tokens": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 0,
+              "audio_tokens": 0,
+              "accepted_prediction_tokens": 0,
+              "rejected_prediction_tokens": 0
+            }
+          },
+          "service_tier": "default",
+          "system_fingerprint": "fp_72ed7ab54c"
+        }
+  recorded_at: Tue, 11 Feb 2025 11:56:57 GMT
+- request:
+    method: post
+    uri: http://localhost:8000/weather
+    body:
+      encoding: UTF-8
+      string: '{"city":"New York"}'
+    headers:
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+      Host:
+      - localhost:8000
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - Werkzeug/3.1.3 Python/3.13.1
+      Date:
+      - Tue, 11 Feb 2025 11:56:57 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '46'
+      Connection:
+      - close
+    body:
+      encoding: UTF-8
+      string: '{"city":"New York","temperature":"14\u00b0C"}
+
+        '
+  recorded_at: Tue, 11 Feb 2025 11:56:57 GMT
+- request:
+    method: post
+    uri: https://api.openai.com/v1/chat/completions
+    body:
+      encoding: UTF-8
+      string: '{"model":"gpt-4o-mini","messages":[{"role":"system","content":"You
+        are an assistant."},{"role":"user","content":"How is the weather in New York?"},{"role":"assistant","content":null,"tool_calls":[{"id":"call_xfTWGarbO4vnCkXaLU2YDzWG","type":"function","function":{"name":"get_weather","arguments":"{\"city\":\"New
+        York\"}"}}],"refusal":null},{"tool_call_id":"call_xfTWGarbO4vnCkXaLU2YDzWG","role":"tool","name":"get_weather","content":"{\"city\"
+        =\u003e \"New York\", \"temperature\" =\u003e \"14°C\"}"}],"response_format":{"type":"json_schema","json_schema":{"name":"commentschema","description":"Schema
+        for the structured response","schema":{"type":"object","properties":{"comment":{"type":"string"}},"required":["comment"],"additionalProperties":false,"strict":true,"$defs":{}}}}}'
+    headers:
+      Content-Type:
+      - application/json
+      Authorization:
+      - Bearer <OPENAI_ACCESS_TOKEN>
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 11 Feb 2025 11:56:57 GMT
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      Access-Control-Expose-Headers:
+      - X-Request-ID
+      Openai-Organization:
+      - user-zqyksmm2ivzciij7kssr3fns
+      Openai-Processing-Ms:
+      - '252'
+      Openai-Version:
+      - '2020-10-01'
+      X-Ratelimit-Limit-Requests:
+      - '10000'
+      X-Ratelimit-Limit-Tokens:
+      - '200000'
+      X-Ratelimit-Remaining-Requests:
+      - '9997'
+      X-Ratelimit-Remaining-Tokens:
+      - '199955'
+      X-Ratelimit-Reset-Requests:
+      - 21.48s
+      X-Ratelimit-Reset-Tokens:
+      - 13ms
+      X-Request-Id:
+      - req_e5fca5041d259cd396ab82f7db5baca8
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains; preload
+      Cf-Cache-Status:
+      - DYNAMIC
+      Set-Cookie:
+      - __cf_bm=VeUQEM6PsbUEYBIPewNxbacmNPyX0T0pJEMQXOrwz2Y-1739275017-1.0.1.1-kh_heMylCZ16XG6iB5JIVnxbgCY3CTSKFoUc62GHWOvTNt7M_4pkHr.kirJILYHYW9STEvcnu4MxGptWD0nciw;
+        path=/; expires=Tue, 11-Feb-25 12:26:57 GMT; domain=.api.openai.com; HttpOnly;
+        Secure; SameSite=None
+      - _cfuvid=uVM7ZH4WF0ps1FOR9KEbv6MOkMZ3Aw3uGuKrosgFmUI-1739275017840-0.0.1.1-604800000;
+        path=/; domain=.api.openai.com; HttpOnly; Secure; SameSite=None
+      X-Content-Type-Options:
+      - nosniff
+      Server:
+      - cloudflare
+      Cf-Ray:
+      - 9104289aae04e22a-NRT
+      Alt-Svc:
+      - h3=":443"; ma=86400
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        ewogICJpZCI6ICJjaGF0Y21wbC1BempBbnJQVWFPUVpFVWhZUXZZSVBEUmN4RXZ4ZyIsCiAgIm9iamVjdCI6ICJjaGF0LmNvbXBsZXRpb24iLAogICJjcmVhdGVkIjogMTczOTI3NTAxNywKICAibW9kZWwiOiAiZ3B0LTRvLW1pbmktMjAyNC0wNy0xOCIsCiAgImNob2ljZXMiOiBbCiAgICB7CiAgICAgICJpbmRleCI6IDAsCiAgICAgICJtZXNzYWdlIjogewogICAgICAgICJyb2xlIjogImFzc2lzdGFudCIsCiAgICAgICAgImNvbnRlbnQiOiAie1wiY29tbWVudFwiOlwiVGhlIGN1cnJlbnQgd2VhdGhlciBpbiBOZXcgWW9yayBpcyAxNMKwQy5cIn0iLAogICAgICAgICJyZWZ1c2FsIjogbnVsbAogICAgICB9LAogICAgICAibG9ncHJvYnMiOiBudWxsLAogICAgICAiZmluaXNoX3JlYXNvbiI6ICJzdG9wIgogICAgfQogIF0sCiAgInVzYWdlIjogewogICAgInByb21wdF90b2tlbnMiOiAxMDUsCiAgICAiY29tcGxldGlvbl90b2tlbnMiOiAxNiwKICAgICJ0b3RhbF90b2tlbnMiOiAxMjEsCiAgICAicHJvbXB0X3Rva2Vuc19kZXRhaWxzIjogewogICAgICAiY2FjaGVkX3Rva2VucyI6IDAsCiAgICAgICJhdWRpb190b2tlbnMiOiAwCiAgICB9LAogICAgImNvbXBsZXRpb25fdG9rZW5zX2RldGFpbHMiOiB7CiAgICAgICJyZWFzb25pbmdfdG9rZW5zIjogMCwKICAgICAgImF1ZGlvX3Rva2VucyI6IDAsCiAgICAgICJhY2NlcHRlZF9wcmVkaWN0aW9uX3Rva2VucyI6IDAsCiAgICAgICJyZWplY3RlZF9wcmVkaWN0aW9uX3Rva2VucyI6IDAKICAgIH0KICB9LAogICJzZXJ2aWNlX3RpZXIiOiAiZGVmYXVsdCIsCiAgInN5c3RlbV9maW5nZXJwcmludCI6ICJmcF83MmVkN2FiNTRjIgp9Cg==
+  recorded_at: Tue, 11 Feb 2025 11:56:57 GMT
+recorded_with: VCR 6.3.1
