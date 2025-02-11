@@ -186,7 +186,7 @@ GEM
       pp (>= 0.6.0)
       rdoc (>= 4.0.0)
       reline (>= 0.4.2)
-    json (2.9.1)
+    json (2.10.1)
     jsonapi-renderer (0.2.2)
     kamal (2.5.1)
       activesupport (>= 7.0)
@@ -371,7 +371,7 @@ GEM
       rubocop-performance
       rubocop-rails
     ruby-next-core (1.1.0)
-    ruby-openai (7.3.1)
+    ruby-openai (7.4.0)
       event_stream_parser (>= 0.3.0, < 2.0.0)
       faraday (>= 1)
       faraday-multipart (>= 1)
