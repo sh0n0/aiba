@@ -451,6 +451,7 @@ DEPENDENCIES
   faker
   kamal
   letter_opener_web
+  net-smtp (= 0.5.0)
   pagy (~> 9.3)
   pg (~> 1.1)
   puma (>= 5.0)
