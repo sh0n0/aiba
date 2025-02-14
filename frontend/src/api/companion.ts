@@ -1,9 +1,17 @@
 import { API_BASE } from "@/constants/api.ts";
 import { useAppStore } from "@/store/store.ts";
 
+type ParamType = "string" | "number" | "array" | "boolean";
+type Tool = {
+  name: string;
+  description: string;
+  url: string;
+  params: { param_type: ParamType; name: string; description: string }[];
+};
+
 export async function createCompanionFetcher(
   _: string,
-  { arg }: { arg: { name: string; description: string; prompt: string } },
+  { arg }: { arg: { name: string; description: string; prompt: string; tools: Tool[] } },
 ) {
   const { uid, client, accessToken } = useAppStore.getState().getAuth();
 
@@ -15,7 +23,7 @@ export async function createCompanionFetcher(
       client,
       "access-token": accessToken,
     },
-    body: JSON.stringify(arg),
+    body: JSON.stringify({ companion: arg }),
   });
   if (!res.ok) {
     throw new Error("Create companion failed");

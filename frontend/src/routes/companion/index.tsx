@@ -1,17 +1,12 @@
-import { createCompanionFetcher, fetchOpenCompanionsFetcher, fetchOwnedCompanionsFetcher } from "@/api/companion.ts";
-import { Button } from "@/components/ui/button.tsx";
-import { Form, FormField, FormLabel } from "@/components/ui/form.tsx";
-import { Input } from "@/components/ui/input.tsx";
+import { fetchOpenCompanionsFetcher, fetchOwnedCompanionsFetcher } from "@/api/companion.ts";
+import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs.tsx";
-import { Textarea } from "@/components/ui/textarea.tsx";
 import { redirectToLoginIfUnauthorized } from "@/lib/utils.ts";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useForm } from "react-hook-form";
+import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
 import useSWR from "swr";
-import useSWRMutation from "swr/mutation";
 
-export const Route = createFileRoute("/companion")({
+export const Route = createFileRoute("/companion/")({
   component: Companion,
   beforeLoad: () => redirectToLoginIfUnauthorized(),
 });
@@ -36,10 +31,12 @@ function Companion() {
             <TabsTrigger value="owned_companions">Owned Companions</TabsTrigger>
             <TabsTrigger value="open_companions">Open Companions</TabsTrigger>
           </TabsList>
+          <Link to="/companion/create" className="ml-4">
+            <Button>Create</Button>
+          </Link>
         </div>
         <TabsContent value="owned_companions" className="w-screen px-12">
           <div className="flex justify-center gap-12">
-            <CreateCompanionForm />
             <CompanionList companions={ownedCompanions} />
           </div>
         </TabsContent>
@@ -50,50 +47,6 @@ function Companion() {
     </div>
   );
 }
-
-const CreateCompanionForm = () => {
-  const form = useForm<{ name: string; description: string; prompt: string }>({
-    defaultValues: { name: "", description: "", prompt: "" },
-  });
-  const { trigger, isMutating, error } = useSWRMutation("companions", createCompanionFetcher);
-
-  const onSubmitCompanion = async (data: { name: string; description: string; prompt: string }) => {
-    const { name, description, prompt } = data;
-    await trigger({ name, description, prompt });
-  };
-
-  return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmitCompanion)} className="w-full max-w-md">
-        <FormLabel htmlFor="name">Name</FormLabel>
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field: { onChange } }) => <Input onChange={onChange} />}
-        />
-
-        <FormLabel htmlFor="description">Description</FormLabel>
-        <FormField
-          control={form.control}
-          name="description"
-          render={({ field: { onChange } }) => <Input onChange={onChange} />}
-        />
-
-        <FormLabel htmlFor="prompt">Prompt</FormLabel>
-        <FormField
-          control={form.control}
-          name="prompt"
-          render={({ field: { onChange } }) => <Textarea onChange={onChange} />}
-        />
-
-        <Button type="submit" disabled={isMutating}>
-          {isMutating ? "Creating..." : "Create"}
-        </Button>
-        {error && <div className="mt-2 text-red-500">Error: {error.message}</div>}
-      </form>
-    </Form>
-  );
-};
 
 type Companion = {
   id: number;
@@ -120,7 +73,11 @@ const CompanionList = ({ companions }: { companions: Companion[] }) => {
         {companions.map((companion) => (
           <TableRow
             key={companion.id}
-            onClick={async () => await navigate({ to: `/@${companion.creator.name}/${companion.name}` })}
+            onClick={async () =>
+              await navigate({
+                to: `/@${companion.creator.name}/${companion.name}`,
+              })
+            }
           >
             <TableCell>{companion.name}</TableCell>
             <TableCell>{companion.description}</TableCell>

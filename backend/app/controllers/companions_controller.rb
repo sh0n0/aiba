@@ -23,8 +23,15 @@ class CompanionsController < ApplicationController
   end
 
   def create
-    companion = Companion.new(companion_params.merge(created_by: current_user.account.id))
+    companion = Companion.new(name: companion_params[:name], description: companion_params[:description], prompt: companion_params[:prompt], creator: current_user.account)
     current_user.account.owned_companions << companion
+
+    companion_params[:tools].each do |tool|
+      companion_tool = CompanionTool.create!(name: tool[:name], description: tool[:description], url: tool[:url], companion: companion)
+      tool[:params].each do |param|
+        CompanionToolParam.create!(param.merge(companion_tool_id: companion_tool.id))
+      end
+    end
 
     if companion.save
       render json: companion, status: :created, location: @companion
@@ -56,6 +63,6 @@ class CompanionsController < ApplicationController
   end
 
   def companion_params
-    params.expect(companion: [ :name, :description, :prompt ])
+    params.expect(companion: [ :name, :description, :prompt, tools: [ [ :name, :description, :url, [ params: [ [ :name, :description, :param_type ] ] ] ] ] ])
   end
 end

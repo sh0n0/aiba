@@ -12,10 +12,11 @@
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as LoginImport } from './routes/login'
-import { Route as CompanionImport } from './routes/companion'
 import { Route as AboutImport } from './routes/about'
 import { Route as IndexImport } from './routes/index'
+import { Route as CompanionIndexImport } from './routes/companion/index'
 import { Route as AccountNameIndexImport } from './routes/$accountName/index'
+import { Route as CompanionCreateImport } from './routes/companion/create'
 import { Route as AccountNameCompanionNameImport } from './routes/$accountName/$companionName'
 
 // Create/Update Routes
@@ -23,12 +24,6 @@ import { Route as AccountNameCompanionNameImport } from './routes/$accountName/$
 const LoginRoute = LoginImport.update({
   id: '/login',
   path: '/login',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const CompanionRoute = CompanionImport.update({
-  id: '/companion',
-  path: '/companion',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -44,9 +39,21 @@ const IndexRoute = IndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const CompanionIndexRoute = CompanionIndexImport.update({
+  id: '/companion/',
+  path: '/companion/',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const AccountNameIndexRoute = AccountNameIndexImport.update({
   id: '/$accountName/',
   path: '/$accountName/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const CompanionCreateRoute = CompanionCreateImport.update({
+  id: '/companion/create',
+  path: '/companion/create',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -74,13 +81,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutImport
       parentRoute: typeof rootRoute
     }
-    '/companion': {
-      id: '/companion'
-      path: '/companion'
-      fullPath: '/companion'
-      preLoaderRoute: typeof CompanionImport
-      parentRoute: typeof rootRoute
-    }
     '/login': {
       id: '/login'
       path: '/login'
@@ -95,11 +95,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AccountNameCompanionNameImport
       parentRoute: typeof rootRoute
     }
+    '/companion/create': {
+      id: '/companion/create'
+      path: '/companion/create'
+      fullPath: '/companion/create'
+      preLoaderRoute: typeof CompanionCreateImport
+      parentRoute: typeof rootRoute
+    }
     '/$accountName/': {
       id: '/$accountName/'
       path: '/$accountName'
       fullPath: '/$accountName'
       preLoaderRoute: typeof AccountNameIndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/companion/': {
+      id: '/companion/'
+      path: '/companion'
+      fullPath: '/companion'
+      preLoaderRoute: typeof CompanionIndexImport
       parentRoute: typeof rootRoute
     }
   }
@@ -110,29 +124,32 @@ declare module '@tanstack/react-router' {
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/companion': typeof CompanionRoute
   '/login': typeof LoginRoute
   '/$accountName/$companionName': typeof AccountNameCompanionNameRoute
+  '/companion/create': typeof CompanionCreateRoute
   '/$accountName': typeof AccountNameIndexRoute
+  '/companion': typeof CompanionIndexRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/companion': typeof CompanionRoute
   '/login': typeof LoginRoute
   '/$accountName/$companionName': typeof AccountNameCompanionNameRoute
+  '/companion/create': typeof CompanionCreateRoute
   '/$accountName': typeof AccountNameIndexRoute
+  '/companion': typeof CompanionIndexRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/companion': typeof CompanionRoute
   '/login': typeof LoginRoute
   '/$accountName/$companionName': typeof AccountNameCompanionNameRoute
+  '/companion/create': typeof CompanionCreateRoute
   '/$accountName/': typeof AccountNameIndexRoute
+  '/companion/': typeof CompanionIndexRoute
 }
 
 export interface FileRouteTypes {
@@ -140,45 +157,50 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/about'
-    | '/companion'
     | '/login'
     | '/$accountName/$companionName'
+    | '/companion/create'
     | '/$accountName'
+    | '/companion'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/about'
-    | '/companion'
     | '/login'
     | '/$accountName/$companionName'
+    | '/companion/create'
     | '/$accountName'
+    | '/companion'
   id:
     | '__root__'
     | '/'
     | '/about'
-    | '/companion'
     | '/login'
     | '/$accountName/$companionName'
+    | '/companion/create'
     | '/$accountName/'
+    | '/companion/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
-  CompanionRoute: typeof CompanionRoute
   LoginRoute: typeof LoginRoute
   AccountNameCompanionNameRoute: typeof AccountNameCompanionNameRoute
+  CompanionCreateRoute: typeof CompanionCreateRoute
   AccountNameIndexRoute: typeof AccountNameIndexRoute
+  CompanionIndexRoute: typeof CompanionIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
-  CompanionRoute: CompanionRoute,
   LoginRoute: LoginRoute,
   AccountNameCompanionNameRoute: AccountNameCompanionNameRoute,
+  CompanionCreateRoute: CompanionCreateRoute,
   AccountNameIndexRoute: AccountNameIndexRoute,
+  CompanionIndexRoute: CompanionIndexRoute,
 }
 
 export const routeTree = rootRoute
@@ -193,10 +215,11 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/about",
-        "/companion",
         "/login",
         "/$accountName/$companionName",
-        "/$accountName/"
+        "/companion/create",
+        "/$accountName/",
+        "/companion/"
       ]
     },
     "/": {
@@ -205,17 +228,20 @@ export const routeTree = rootRoute
     "/about": {
       "filePath": "about.tsx"
     },
-    "/companion": {
-      "filePath": "companion.tsx"
-    },
     "/login": {
       "filePath": "login.tsx"
     },
     "/$accountName/$companionName": {
       "filePath": "$accountName/$companionName.tsx"
     },
+    "/companion/create": {
+      "filePath": "companion/create.tsx"
+    },
     "/$accountName/": {
       "filePath": "$accountName/index.tsx"
+    },
+    "/companion/": {
+      "filePath": "companion/index.tsx"
     }
   }
 }
