@@ -20,7 +20,8 @@ class TimelineBroadcaster
       },
       account: {
         name: account.name,
-        displayName: account.display_name
+        displayName: account.display_name,
+        avatarUrl: account.avatar_url
       }
     })
   end

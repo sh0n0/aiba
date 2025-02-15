@@ -53,4 +53,8 @@ Rails.application.configure do
   config.action_mailer.default_url_options = { host: "localhost:3000" }
 
   config.action_mailer.delivery_method = :letter_opener
+
+  config.active_storage.service = :local
 end
+
+Rails.application.routes.default_url_options[:host] = "localhost:3000"

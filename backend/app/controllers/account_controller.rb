@@ -1,12 +1,24 @@
 class AccountController < ApplicationController
   TWEETS_PER_PAGE = 10
 
-  before_action :set_account
+  before_action :authenticate_user!, only: %i[update]
+  before_action :set_account, only: %i[show tweets]
 
   rescue_from Pagy::OverflowError, with: :not_found
 
   def show
     render json: @account, serializer: AccountSerializer
+  end
+
+  def my
+    render json: current_user.account, serializer: AccountSerializer
+  end
+
+  def avatar
+    account = current_user.account
+    account.avatar.attach(params.require(:avatar))
+    account.save!
+    render json: account, serializer: AccountSerializer
   end
 
   def tweets

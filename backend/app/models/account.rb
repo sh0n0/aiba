@@ -6,12 +6,18 @@ class Account < ApplicationRecord
   has_many :companion_ownerships
   has_many :owned_companions, through: :companion_ownerships, source: :companion
 
+  has_one_attached :avatar
+
   validates :name, presence: true, uniqueness: true
 
   before_create :generate_keys
 
   def display_name
     super || name
+  end
+
+  def avatar_url
+    Rails.application.routes.url_helpers.url_for(avatar) if avatar.attached?
   end
 
   def default_companion

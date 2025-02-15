@@ -26,6 +26,7 @@ export type Tweet = {
   account: {
     name: string;
     displayName: string;
+    avatarUrl: string;
     createdAt: string;
   };
 };

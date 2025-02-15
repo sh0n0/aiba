@@ -15,3 +15,17 @@ export function redirectToLoginIfUnauthorized() {
     });
   }
 }
+
+export function convertToFormData(base64Image: string, propertyName: string, fileName: string) {
+  const formData = new FormData();
+  const byteString = atob(base64Image.split(",")[1]);
+  const arrayBuffer = new ArrayBuffer(byteString.length);
+  const view = new Uint8Array(arrayBuffer);
+  for (let i = 0; i < byteString.length; i++) {
+    view[i] = byteString.charCodeAt(i);
+  }
+  const blob = new Blob([arrayBuffer], { type: "image/png" });
+  formData.append(propertyName, blob, fileName);
+
+  return formData;
+}

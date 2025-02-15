@@ -1,15 +1,25 @@
 import { API_BASE } from "@/constants/api.ts";
+import { convertToFormData } from "@/lib/utils";
 import { useAppStore } from "@/store/store.ts";
 
 type AccountResponse = {
   name: string;
   displayName: string;
+  avatarUrl: string;
 };
 
 export async function accountFetcher(_: string, { arg }: { arg: { name: string } }): Promise<AccountResponse> {
+  const res = await fetch(`${API_BASE}/account/${arg.name}`);
+  if (!res.ok) {
+    throw new Error("Fetch account failed");
+  }
+  return res.json();
+}
+
+export async function myAccountFetcher(_: string): Promise<AccountResponse> {
   const { uid, client, accessToken } = useAppStore.getState().getAuth();
 
-  const res = await fetch(`${API_BASE}/account/${arg.name}`, {
+  const res = await fetch(`${API_BASE}/account/my`, {
     headers: {
       uid,
       client,
@@ -20,6 +30,24 @@ export async function accountFetcher(_: string, { arg }: { arg: { name: string }
     throw new Error("Fetch account failed");
   }
   return res.json();
+}
+
+export async function postAvatarFetcher(_: string, { arg }: { arg: { base64Image: string } }) {
+  const { uid, client, accessToken } = useAppStore.getState().getAuth();
+
+  const res = await fetch(`${API_BASE}/account/avatar`, {
+    method: "POST",
+    headers: {
+      uid,
+      client,
+      "access-token": accessToken,
+    },
+    body: convertToFormData(arg.base64Image, "avatar", "avatar.png"),
+  });
+  if (!res.ok) {
+    throw new Error("Post avatar failed");
+  }
+  return true;
 }
 
 export type TweetResponse = {
@@ -37,6 +65,7 @@ export type TweetResponse = {
   account: {
     name: string;
     displayName: string;
+    avatarUrl: string;
   };
 };
 

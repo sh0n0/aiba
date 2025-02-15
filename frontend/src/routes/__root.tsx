@@ -12,12 +12,12 @@ export const Route = createRootRoute({
         <div className="flex gap-2 p-2">
           <Link to="/" className="[&.active]:font-bold">
             Home
-          </Link>{" "}
-          <Link to="/about" className="[&.active]:font-bold">
-            About
           </Link>
           <Link to="/companion" className="[&.active]:font-bold">
             Companion
+          </Link>
+          <Link to="/settings/profile" className="[&.active]:font-bold">
+            Settings
           </Link>
           {accessToken && (
             <Link to={"/"} params={{ logout: true }} onClick={() => clearAll()}>

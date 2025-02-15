@@ -61,7 +61,13 @@ function Account() {
 
   return (
     <div className="flex flex-col items-center">
-      {account.displayName} @{account.name}
+      <div className="flex items-center gap-2">
+        <img src={account.avatarUrl} alt="avatar" className="h-10 w-10 rounded-full" />
+        <div>
+          {account.displayName} @{account.name}
+        </div>
+      </div>
+
       {tweets.map((page, i) => (
         // biome-ignore lint/suspicious/noArrayIndexKey: This is a paginated list
         <div key={i}>
