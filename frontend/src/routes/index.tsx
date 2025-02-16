@@ -1,8 +1,12 @@
-import { postTweetFetcher } from "@/api/tweet.ts";
+import { postTweetFetcher, tweetsFetcher } from "@/api/tweet.ts";
+import type { TweetResponse } from "@/api/types";
+import { InfiniteScrollObserver } from "@/components/InfiniteScrollObserver";
 import { TweetCard } from "@/components/tweetCard";
 import { Button } from "@/components/ui/button.tsx";
 import { FormField } from "@/components/ui/form.tsx";
 import { Textarea } from "@/components/ui/textarea.tsx";
+import { ACCOUNT_TWEET_PAGE_SIZE, API_BASE } from "@/constants/api";
+import { useInfiniteLoading } from "@/hooks/useInfiniteLoading";
 import { redirectToLoginIfUnauthorized } from "@/lib/utils.ts";
 import { useAppStore } from "@/store/store.ts";
 import type { Tweet } from "@/store/tweet.ts";
@@ -10,6 +14,7 @@ import { createCable } from "@anycable/web";
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import useSWRInfinite from "swr/infinite";
 import useSWRMutation from "swr/mutation";
 
 export const Route = createFileRoute("/")({
@@ -20,8 +25,26 @@ export const Route = createFileRoute("/")({
 function Index() {
   const timeline = useAppStore((state) => state.timeline);
   const addTweet = useAppStore((state) => state.addTweet);
+  const appendTweet = useAppStore((state) => state.appendTweet);
+
   const form = useForm({ defaultValues: { text: "" } });
   const { trigger, isMutating, error } = useSWRMutation("tweets", postTweetFetcher);
+
+  const { data: tweets, setSize } = useSWRInfinite((pageIndex: number, previousPageData: TweetResponse[]) => {
+    if (previousPageData && !previousPageData.length) return null;
+    return `${API_BASE}/tweets?page=${pageIndex + 1}`;
+  }, tweetsFetcher);
+
+  const { isReachingEnd, loadMore } = useInfiniteLoading(tweets, setSize, ACCOUNT_TWEET_PAGE_SIZE);
+
+  useEffect(() => {
+    if (tweets && tweets.length > 0) {
+      const lastPage = tweets[tweets.length - 1] || [];
+      for (const tweet of lastPage) {
+        appendTweet(tweet);
+      }
+    }
+  }, [tweets, appendTweet]);
 
   useEffect(() => {
     const cable = createCable("ws://localhost:8080/cable", {
@@ -47,7 +70,7 @@ function Index() {
   };
 
   return (
-    <div className="flex h-screen flex-col items-center">
+    <div className="flex h-screen flex-col items-center overflow-y-auto pb-20">
       <form onSubmit={form.handleSubmit(onSubmitTweet)}>
         <FormField
           control={form.control}
@@ -62,6 +85,7 @@ function Index() {
       {timeline.map((tweet) => (
         <TweetCard key={tweet.id} tweet={tweet} />
       ))}
+      {!isReachingEnd && <InfiniteScrollObserver onIntersect={loadMore}>Loading more...</InfiniteScrollObserver>}
     </div>
   );
 }

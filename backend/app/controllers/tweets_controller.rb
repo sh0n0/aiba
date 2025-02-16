@@ -1,11 +1,11 @@
 class TweetsController < ApplicationController
-  before_action :authenticate_user!
+  before_action :authenticate_user!, only: %i[ create destroy ]
   before_action :set_tweet, only: %i[ show destroy ]
 
   def index
-    @tweets = Tweet.all
-
-    render json: @tweets
+    tweets = Tweet.recent.eager_load(:account, companion_comment: { companion: :creator })
+    _, tweets = pagy(tweets, limit: TWEETS_PER_PAGE)
+    render json: tweets, each_serializer: TweetSerializer
   end
 
   def show

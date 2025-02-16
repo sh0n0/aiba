@@ -24,7 +24,7 @@ type TweetCardProps = {
 
 export const TweetCard = ({ tweet }: { tweet: TweetCardProps }) => {
   return (
-    <Card className="fade-in h-fit min-h-32 w-[600px]" key={tweet.id}>
+    <Card className="fade-in mb-4 w-[600px] overflow-visible" key={tweet.id}>
       <CardHeader>
         <div className="flex items-center space-x-2">
           <Avatar>

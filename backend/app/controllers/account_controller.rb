@@ -1,7 +1,4 @@
 class AccountController < ApplicationController
-  TWEETS_PER_PAGE = 10
-
-  before_action :authenticate_user!, only: %i[update]
   before_action :set_account, only: %i[show tweets]
 
   rescue_from Pagy::OverflowError, with: :not_found

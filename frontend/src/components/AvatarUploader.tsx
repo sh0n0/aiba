@@ -2,7 +2,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"; //
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Slider } from "@/components/ui/slider";
-import type React from "react";
 import { useCallback, useRef, useState } from "react";
 import Cropper, { type Area } from "react-easy-crop";
 
@@ -11,7 +10,7 @@ interface AvatarUploaderProps {
   onUpload?: (image: string) => void;
 }
 
-export const AvatarUploader: React.FC<AvatarUploaderProps> = ({ avatarUrl, onUpload }) => {
+export const AvatarUploader = ({ avatarUrl, onUpload }: AvatarUploaderProps) => {
   const [image, setImage] = useState<string | null>(null);
   const [crop, setCrop] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const [zoom, setZoom] = useState<number>(1);
@@ -24,7 +23,7 @@ export const AvatarUploader: React.FC<AvatarUploaderProps> = ({ avatarUrl, onUpl
   const [croppedImage, setCroppedImage] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const onCropComplete = useCallback((_unusedArea: Area, croppedAreaPixels: Area) => {
     setCroppedAreaPixels(croppedAreaPixels);

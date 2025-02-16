@@ -4,6 +4,7 @@ import type { StateCreator } from "zustand/vanilla";
 export interface TimelineSlice {
   timeline: Tweet[];
   addTweet: (tweet: Tweet) => void;
+  appendTweet: (tweet: Tweet) => void;
 }
 
 export type Tweet = {
@@ -37,5 +38,6 @@ export const initialTimelineSlice = {
 
 export const createTimelineSlice: StateCreator<State, [["zustand/devtools", never]], [], TimelineSlice> = (set) => ({
   ...initialTimelineSlice,
-  addTweet: (tweetWithComment) => set((state) => ({ timeline: [tweetWithComment, ...state.timeline] })),
+  addTweet: (tweet: Tweet) => set((state) => ({ timeline: [tweet, ...state.timeline] })),
+  appendTweet: (tweet: Tweet) => set((state) => ({ timeline: [...state.timeline, tweet] })),
 });
