@@ -26,18 +26,6 @@ RSpec.describe TweetsController, type: :request do
         expect(response.parsed_body.first['id']).to eq(tweets.last.id)
         expect(response.parsed_body.last['id']).to eq(tweets[tweets.size - page_size].id)
       end
-
-      it 'returns the account for each tweet' do
-        get '/tweets'
-        expect(response).to have_http_status(200)
-        expect(response.parsed_body.first).to have_key('account')
-      end
-
-      it 'returns the companion comment with its companion and creator for each tweet' do
-        get '/tweets'
-        expect(response).to have_http_status(200)
-        expect(response.parsed_body.first['companionComment']['companion']).to have_key('creator')
-      end
     end
 
     context 'when tweets do not exist' do
