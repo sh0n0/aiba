@@ -23,18 +23,28 @@ class CompanionsController < ApplicationController
   end
 
   def create
-    companion = Companion.new(name: companion_params[:name], description: companion_params[:description], prompt: companion_params[:prompt], creator: current_user.account)
+    companion = Companion.new(
+      name: companion_params[:name],
+      description: companion_params[:description],
+      prompt: companion_params[:prompt],
+      creator: current_user.account
+    )
     current_user.account.owned_companions << companion
 
     companion_params[:tools].each do |tool|
-      companion_tool = CompanionTool.create!(name: tool[:name], description: tool[:description], url: tool[:url], companion: companion)
+      companion_tool = CompanionTool.create!(
+        name: tool[:name],
+        description: tool[:description],
+        url: tool[:url],
+        companion: companion
+      )
       tool[:params].each do |param|
         CompanionToolParam.create!(param.merge(companion_tool_id: companion_tool.id))
       end
     end
 
     if companion.save
-      render json: companion, status: :created, location: @companion
+      render json: companion, status: :created, location: companion
     else
       render json: companion.errors, status: :unprocessable_entity
     end
@@ -53,27 +63,17 @@ class CompanionsController < ApplicationController
   end
 
   def publish
-    account = Account.find_by!(name: params[:account_name])
-    return render status: :forbidden if account != current_user.account
-
-    companion = Companion.created_by(account).with_name(params[:companion_name]).first
-    return render status: :not_found if companion.nil?
-    return render status: :conflict if companion.published_at.present?
-
-    companion.publish!
-    render json: companion, serializer: CompanionDetailSerializer, account: current_user.account
+    change_publication_state do |companion|
+      return render status: :conflict if companion.published_at.present?
+      companion.publish!
+    end
   end
 
   def unpublish
-    account = Account.find_by!(name: params[:account_name])
-    return render status: :forbidden if account != current_user.account
-
-    companion = Companion.created_by(account).with_name(params[:companion_name]).first
-    return render status: :not_found if companion.nil?
-    return render status: :conflict if companion.published_at.nil?
-
-    companion.unpublish!
-    render json: companion, serializer: CompanionDetailSerializer, account: current_user.account
+    change_publication_state do |companion|
+      return render status: :conflict if companion.published_at.nil?
+      companion.unpublish!
+    end
   end
 
   def destroy
@@ -82,11 +82,30 @@ class CompanionsController < ApplicationController
 
   private
 
+  def change_publication_state
+    account = Account.find_by!(name: params[:account_name])
+    return render status: :forbidden if account != current_user.account
+
+    companion = Companion.created_by(account).with_name(params[:companion_name]).first
+    return render status: :not_found if companion.nil?
+
+    yield companion
+
+    render json: companion, serializer: CompanionDetailSerializer, account: current_user.account
+  end
+
   def set_companion
     @companion = Companion.find(params.expect(:id))
   end
 
   def companion_params
-    params.expect(companion: [ :name, :description, :prompt, tools: [ [ :name, :description, :url, [ params: [ [ :name, :description, :param_type ] ] ] ] ] ])
+    params.expect(companion: [
+      :name,
+      :description,
+      :prompt,
+      tools: [
+        [ :name, :description, :url, [ params: [ [ :name, :description, :param_type ] ] ] ]
+      ]
+    ])
   end
 end
