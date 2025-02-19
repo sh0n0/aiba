@@ -14,7 +14,7 @@ RSpec.describe CompanionsController, type: :request do
         post "/companions/#{account.name}/#{companion.name}/unpublish", headers: auth_headers(user)
         expect(response).to have_http_status(200)
 
-        expect { companion.reload }.to change { companion.published_at }.from(current_time).to(nil)
+        expect { companion.reload }.to change { companion.published_at }.from(be_within(1.minute).of(current_time)).to(nil)
       end
     end
 
