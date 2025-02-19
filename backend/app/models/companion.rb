@@ -24,4 +24,12 @@ class Companion < ApplicationRecord
     text = Ai::OpenaiApi.instance.generate_sentences(prompt, tweet.text, companion_tools)
     CompanionComment.create(text: text, companion: self, tweet: tweet)
   end
+
+  def publish!
+    update!(published_at: Time.now.utc)
+  end
+
+  def unpublish!
+    update!(published_at: nil)
+  end
 end

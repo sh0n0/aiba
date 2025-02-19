@@ -1,6 +1,7 @@
-import { fetchCompanionDetailFetcher } from "@/api/companion.ts";
+import { Button } from "@/components/ui/button";
+import { useCompanionDetail } from "@/hooks/useCompanionDetail";
+import { useCompanionPublishActions } from "@/hooks/useCompanionPublishActions";
 import { createFileRoute, notFound, useParams } from "@tanstack/react-router";
-import useSWR from "swr";
 
 export const Route = createFileRoute("/$accountName/$companionName")({
   component: Account,
@@ -16,23 +17,27 @@ function Account() {
     from: "/$accountName/$companionName",
   });
   const sanitizedAccountName = accountName.replace(/^@/, "");
-  const { data } = useSWR(
-    [`/account/${sanitizedAccountName}`, { accountName: sanitizedAccountName, companionName: companionName }],
-    ([_, arg]) => fetchCompanionDetailFetcher(_, { arg }),
-  );
+
+  const { data, publishedAt, setPublishedAt } = useCompanionDetail(sanitizedAccountName, companionName);
+  const { publish, unpublish } = useCompanionPublishActions(sanitizedAccountName, companionName, setPublishedAt);
 
   if (!data) {
     return <div>Loading...</div>;
   }
 
+  const publishable = !publishedAt && data.prompt;
+  const unpublishable = publishedAt && data.prompt;
+
   return (
     <div>
+      {publishable && <Button onClick={publish}>Publish</Button>}
+      {unpublishable && <Button onClick={unpublish}>Unpublish</Button>}
       <p>
         {data.creator.name}/{data.name}
       </p>
       <p>{data.description}</p>
       <p>{data.prompt}</p>
-      <p>{data.publishedAt}</p>
+      <p>{publishedAt}</p>
     </div>
   );
 }

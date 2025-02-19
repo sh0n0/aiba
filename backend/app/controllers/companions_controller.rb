@@ -52,6 +52,30 @@ class CompanionsController < ApplicationController
     end
   end
 
+  def publish
+    account = Account.find_by!(name: params[:account_name])
+    return render status: :forbidden if account != current_user.account
+
+    companion = Companion.created_by(account).with_name(params[:companion_name]).first
+    return render status: :not_found if companion.nil?
+    return render status: :conflict if companion.published_at.present?
+
+    companion.publish!
+    render json: companion, serializer: CompanionDetailSerializer, account: current_user.account
+  end
+
+  def unpublish
+    account = Account.find_by!(name: params[:account_name])
+    return render status: :forbidden if account != current_user.account
+
+    companion = Companion.created_by(account).with_name(params[:companion_name]).first
+    return render status: :not_found if companion.nil?
+    return render status: :conflict if companion.published_at.nil?
+
+    companion.unpublish!
+    render json: companion, serializer: CompanionDetailSerializer, account: current_user.account
+  end
+
   def destroy
     @companion.destroy!
   end

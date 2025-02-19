@@ -103,3 +103,43 @@ export async function fetchCompanionDetailFetcher(
   }
   return res.json();
 }
+
+export async function publishCompanionFetcher(
+  _: string,
+  { arg }: { arg: { accountName: string; companionName: string } },
+): Promise<CompanionDetailResponse> {
+  const { uid, client, accessToken } = useAppStore.getState().getAuth();
+
+  const res = await fetch(`${API_BASE}/companions/${arg.accountName}/${arg.companionName}/publish`, {
+    method: "POST",
+    headers: {
+      uid,
+      client,
+      "access-token": accessToken,
+    },
+  });
+  if (!res.ok) {
+    throw new Error("Publish companion failed");
+  }
+  return res.json();
+}
+
+export async function unpublishCompanionFetcher(
+  _: string,
+  { arg }: { arg: { accountName: string; companionName: string } },
+): Promise<CompanionDetailResponse> {
+  const { uid, client, accessToken } = useAppStore.getState().getAuth();
+
+  const res = await fetch(`${API_BASE}/companions/${arg.accountName}/${arg.companionName}/unpublish`, {
+    method: "POST",
+    headers: {
+      uid,
+      client,
+      "access-token": accessToken,
+    },
+  });
+  if (!res.ok) {
+    throw new Error("Unpublish companion failed");
+  }
+  return res.json();
+}

@@ -5,6 +5,8 @@ Rails.application.routes.draw do
     get :owned, on: :collection
   end
   get "companions/:account_name/:companion_name", to: "companions#show"
+  post "companions/:account_name/:companion_name/publish", to: "companions#publish"
+  post "companions/:account_name/:companion_name/unpublish", to: "companions#unpublish"
 
   resources :tweets
 
