@@ -1,7 +1,7 @@
 import { accountFetcher, accountTweetsFetcher } from "@/api/account";
 import type { TweetResponse } from "@/api/types";
 import { InfiniteScrollObserver } from "@/components/InfiniteScrollObserver";
-import { TweetCard } from "@/components/tweetCard";
+import { TweetCard } from "@/components/TweetCard";
 import { ACCOUNT_TWEET_PAGE_SIZE, API_BASE } from "@/constants/api";
 import { useInfiniteLoading } from "@/hooks/useInfiniteLoading";
 import { createFileRoute, notFound, useParams } from "@tanstack/react-router";

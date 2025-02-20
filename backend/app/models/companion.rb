@@ -5,6 +5,7 @@ class Companion < ApplicationRecord
   has_many :owners, through: :companion_ownerships, source: :account
   has_many :companion_comments
   has_many :companion_tools
+  has_many :stars, class_name: "CompanionStar"
 
   validates :name, presence: true
   validates :description, presence: true
@@ -13,6 +14,15 @@ class Companion < ApplicationRecord
   scope :published, -> { where.not(published_at: nil) }
   scope :with_name, ->(name) { where(name: name) }
   scope :created_by, ->(account) { where(creator: account) }
+
+  def starred_count
+    stars.count
+  end
+
+  # @param [Account] account
+  def starred_by?(account)
+    stars.exists?(account: account)
+  end
 
   # @param [Account] account
   def editable_by?(account)

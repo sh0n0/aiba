@@ -1,7 +1,11 @@
 class CompanionDetailSerializer < ActiveModel::Serializer
-  attributes :name, :description, :prompt, :published_at
+  attributes :name, :description, :prompt, :published_at, :starred, :starred_count
 
   has_one :creator, serializer: AccountSerializer
+
+  def starred
+    object.starred_by?(account)
+  end
 
   def prompt
     object.creator == account ? object.prompt : nil

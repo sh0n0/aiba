@@ -1,6 +1,9 @@
 require "sidekiq/web"
 
 Rails.application.routes.draw do
+  post "companions/:account_name/:companion_name/star", to: "companion_stars#create"
+  delete "companions/:account_name/:companion_name/star", to: "companion_stars#destroy"
+
   resources :companions, only: [ :index, :create, :update, :destroy ] do
     get :owned, on: :collection
   end

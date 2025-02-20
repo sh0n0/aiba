@@ -1,6 +1,8 @@
+import { StarButton } from "@/components/StarButton";
 import { Button } from "@/components/ui/button";
 import { useCompanionDetail } from "@/hooks/useCompanionDetail";
 import { useCompanionPublishActions } from "@/hooks/useCompanionPublishActions";
+import { useCompanionStarActions } from "@/hooks/useCompanionStarActions";
 import { createFileRoute, notFound, useParams } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/$accountName/$companionName")({
@@ -21,6 +23,12 @@ function Account() {
   const { data, publishedAt, setPublishedAt } = useCompanionDetail(sanitizedAccountName, companionName);
   const { publish, unpublish } = useCompanionPublishActions(sanitizedAccountName, companionName, setPublishedAt);
 
+  const { starred, star, unstar } = useCompanionStarActions(
+    sanitizedAccountName,
+    companionName,
+    data?.starred ?? false,
+  );
+
   if (!data) {
     return <div>Loading...</div>;
   }
@@ -32,6 +40,7 @@ function Account() {
     <div>
       {publishable && <Button onClick={publish}>Publish</Button>}
       {unpublishable && <Button onClick={unpublish}>Unpublish</Button>}
+      <StarButton starred={starred} onToggle={starred ? unstar : star} />
       <p>
         {data.creator.name}/{data.name}
       </p>

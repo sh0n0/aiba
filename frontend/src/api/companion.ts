@@ -83,6 +83,8 @@ type CompanionDetailResponse = {
     name: string;
     displayName: string;
   };
+  starred: boolean;
+  starredCount: number;
 };
 
 export async function fetchCompanionDetailFetcher(

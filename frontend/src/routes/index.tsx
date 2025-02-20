@@ -1,7 +1,7 @@
 import { postTweetFetcher, tweetsFetcher } from "@/api/tweet.ts";
 import type { TweetResponse } from "@/api/types";
 import { InfiniteScrollObserver } from "@/components/InfiniteScrollObserver";
-import { TweetCard } from "@/components/tweetCard";
+import { TweetCard } from "@/components/TweetCard";
 import { Button } from "@/components/ui/button.tsx";
 import { FormField } from "@/components/ui/form.tsx";
 import { Textarea } from "@/components/ui/textarea.tsx";

@@ -6,6 +6,9 @@ class Account < ApplicationRecord
   has_many :companion_ownerships
   has_many :owned_companions, through: :companion_ownerships, source: :companion
 
+  has_many :companion_stars
+  has_many :starred_companions, through: :companion_stars, source: :companion
+
   has_one_attached :avatar
 
   validates :name, presence: true, uniqueness: true
