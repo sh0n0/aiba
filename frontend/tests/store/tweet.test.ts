@@ -1,6 +1,6 @@
-import { describe, it, expect, beforeEach } from "vitest";
-import type { Tweet } from "@/store/tweet";
 import { useAppStore } from "@/store/store";
+import type { Tweet } from "@/store/tweet";
+import { beforeEach, describe, expect, it } from "vitest";
 
 describe("TimelineSlice", () => {
   beforeEach(() => {
