@@ -38,6 +38,18 @@ export const initialTimelineSlice = {
 
 export const createTimelineSlice: StateCreator<State, [["zustand/devtools", never]], [], TimelineSlice> = (set) => ({
   ...initialTimelineSlice,
-  addTweet: (tweet: Tweet) => set((state) => ({ timeline: [tweet, ...state.timeline] })),
-  appendTweet: (tweet: Tweet) => set((state) => ({ timeline: [...state.timeline, tweet] })),
+  addTweet: (tweet: Tweet) =>
+    set((state) => {
+      if (state.timeline.some((t) => t.id === tweet.id)) {
+        return state;
+      }
+      return { timeline: [tweet, ...state.timeline] };
+    }),
+  appendTweet: (tweet: Tweet) =>
+    set((state) => {
+      if (state.timeline.some((t) => t.id === tweet.id)) {
+        return state;
+      }
+      return { timeline: [...state.timeline, tweet] };
+    }),
 });
