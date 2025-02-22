@@ -1,6 +1,6 @@
+import type { TweetResponse } from "@/api/types";
 import { API_BASE } from "@/constants/api.ts";
 import { useAppStore } from "@/store/store.ts";
-import type { TweetResponse } from "./types";
 
 export async function tweetsFetcher(url: string): Promise<TweetResponse[]> {
   const res = await fetch(url, {

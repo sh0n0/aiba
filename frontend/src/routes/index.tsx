@@ -31,7 +31,7 @@ function Index() {
   const { trigger, isMutating, error } = useSWRMutation("tweets", postTweetFetcher);
 
   const { data: tweets, setSize } = useSWRInfinite((pageIndex: number, previousPageData: TweetResponse[]) => {
-    if (previousPageData && !previousPageData.length) return null;
+    if (previousPageData && previousPageData.length < ACCOUNT_TWEET_PAGE_SIZE) return null;
     return `${API_BASE}/tweets?page=${pageIndex + 1}`;
   }, tweetsFetcher);
 

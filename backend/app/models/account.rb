@@ -27,6 +27,10 @@ class Account < ApplicationRecord
     owned_companions.find_by(companion_ownerships: { is_default: true })
   end
 
+  def companions_count
+    created_companions.published.count
+  end
+
   private
 
   def generate_keys

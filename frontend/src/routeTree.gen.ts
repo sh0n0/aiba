@@ -17,6 +17,7 @@ import { Route as CompanionIndexImport } from './routes/companion/index'
 import { Route as AccountNameIndexImport } from './routes/$accountName/index'
 import { Route as SettingsProfileImport } from './routes/settings/profile'
 import { Route as CompanionCreateImport } from './routes/companion/create'
+import { Route as AccountNameCompanionsImport } from './routes/$accountName/companions'
 import { Route as AccountNameCompanionNameImport } from './routes/$accountName/$companionName'
 
 // Create/Update Routes
@@ -57,6 +58,12 @@ const CompanionCreateRoute = CompanionCreateImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const AccountNameCompanionsRoute = AccountNameCompanionsImport.update({
+  id: '/$accountName/companions',
+  path: '/$accountName/companions',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const AccountNameCompanionNameRoute = AccountNameCompanionNameImport.update({
   id: '/$accountName/$companionName',
   path: '/$accountName/$companionName',
@@ -86,6 +93,13 @@ declare module '@tanstack/react-router' {
       path: '/$accountName/$companionName'
       fullPath: '/$accountName/$companionName'
       preLoaderRoute: typeof AccountNameCompanionNameImport
+      parentRoute: typeof rootRoute
+    }
+    '/$accountName/companions': {
+      id: '/$accountName/companions'
+      path: '/$accountName/companions'
+      fullPath: '/$accountName/companions'
+      preLoaderRoute: typeof AccountNameCompanionsImport
       parentRoute: typeof rootRoute
     }
     '/companion/create': {
@@ -125,6 +139,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/$accountName/$companionName': typeof AccountNameCompanionNameRoute
+  '/$accountName/companions': typeof AccountNameCompanionsRoute
   '/companion/create': typeof CompanionCreateRoute
   '/settings/profile': typeof SettingsProfileRoute
   '/$accountName': typeof AccountNameIndexRoute
@@ -135,6 +150,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/$accountName/$companionName': typeof AccountNameCompanionNameRoute
+  '/$accountName/companions': typeof AccountNameCompanionsRoute
   '/companion/create': typeof CompanionCreateRoute
   '/settings/profile': typeof SettingsProfileRoute
   '/$accountName': typeof AccountNameIndexRoute
@@ -146,6 +162,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/$accountName/$companionName': typeof AccountNameCompanionNameRoute
+  '/$accountName/companions': typeof AccountNameCompanionsRoute
   '/companion/create': typeof CompanionCreateRoute
   '/settings/profile': typeof SettingsProfileRoute
   '/$accountName/': typeof AccountNameIndexRoute
@@ -158,6 +175,7 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/$accountName/$companionName'
+    | '/$accountName/companions'
     | '/companion/create'
     | '/settings/profile'
     | '/$accountName'
@@ -167,6 +185,7 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/$accountName/$companionName'
+    | '/$accountName/companions'
     | '/companion/create'
     | '/settings/profile'
     | '/$accountName'
@@ -176,6 +195,7 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/$accountName/$companionName'
+    | '/$accountName/companions'
     | '/companion/create'
     | '/settings/profile'
     | '/$accountName/'
@@ -187,6 +207,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   LoginRoute: typeof LoginRoute
   AccountNameCompanionNameRoute: typeof AccountNameCompanionNameRoute
+  AccountNameCompanionsRoute: typeof AccountNameCompanionsRoute
   CompanionCreateRoute: typeof CompanionCreateRoute
   SettingsProfileRoute: typeof SettingsProfileRoute
   AccountNameIndexRoute: typeof AccountNameIndexRoute
@@ -197,6 +218,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   LoginRoute: LoginRoute,
   AccountNameCompanionNameRoute: AccountNameCompanionNameRoute,
+  AccountNameCompanionsRoute: AccountNameCompanionsRoute,
   CompanionCreateRoute: CompanionCreateRoute,
   SettingsProfileRoute: SettingsProfileRoute,
   AccountNameIndexRoute: AccountNameIndexRoute,
@@ -216,6 +238,7 @@ export const routeTree = rootRoute
         "/",
         "/login",
         "/$accountName/$companionName",
+        "/$accountName/companions",
         "/companion/create",
         "/settings/profile",
         "/$accountName/",
@@ -230,6 +253,9 @@ export const routeTree = rootRoute
     },
     "/$accountName/$companionName": {
       "filePath": "$accountName/$companionName.tsx"
+    },
+    "/$accountName/companions": {
+      "filePath": "$accountName/companions.tsx"
     },
     "/companion/create": {
       "filePath": "companion/create.tsx"

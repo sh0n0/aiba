@@ -4,7 +4,7 @@ import { InfiniteScrollObserver } from "@/components/InfiniteScrollObserver";
 import { TweetCard } from "@/components/TweetCard";
 import { ACCOUNT_TWEET_PAGE_SIZE, API_BASE } from "@/constants/api";
 import { useInfiniteLoading } from "@/hooks/useInfiniteLoading";
-import { createFileRoute, notFound, useParams } from "@tanstack/react-router";
+import { Link, createFileRoute, notFound, useParams } from "@tanstack/react-router";
 import useSWR from "swr";
 import useSWRInfinite from "swr/infinite";
 
@@ -42,6 +42,9 @@ function Account() {
         <div>
           {account.displayName} @{account.name}
         </div>
+        <Link to={"/$accountName/companions"} params={{ accountName: accountName }} className="hover:underline">
+          {account.companionsCount} companions
+        </Link>
       </div>
 
       {tweets.map((page, i) => (

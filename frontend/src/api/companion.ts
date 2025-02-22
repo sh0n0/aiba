@@ -1,3 +1,4 @@
+import type { CompanionResponse } from "@/api/types/companion.ts";
 import { API_BASE } from "@/constants/api.ts";
 import { useAppStore } from "@/store/store.ts";
 
@@ -30,17 +31,6 @@ export async function createCompanionFetcher(
   }
   return true;
 }
-
-type CompanionResponse = {
-  id: number;
-  name: string;
-  description: string;
-  creator: {
-    name: string;
-    displayName: string;
-    createdAt: string;
-  };
-};
 
 export async function fetchOpenCompanionsFetcher(_: string): Promise<CompanionResponse[]> {
   const { uid, client, accessToken } = useAppStore.getState().getAuth();

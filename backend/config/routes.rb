@@ -16,6 +16,7 @@ Rails.application.routes.draw do
   get "account/my", to: "account#my"
   post "account/avatar", to: "account#avatar"
   get "account/:name/tweets", to: "account#tweets"
+  get "account/:name/companions", to: "account#companions"
 
   resources :account, param: :name, only: [ :show ]
 
