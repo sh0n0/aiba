@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@anycable/web':
-        specifier: ^1.0.0
-        version: 1.0.0
+        specifier: ^1.1.0
+        version: 1.1.0
       '@hookform/resolvers':
         specifier: ^3.10.0
         version: 3.10.0(react-hook-form@7.54.2(react@18.3.1))
@@ -131,12 +131,12 @@ packages:
     resolution: {integrity: sha512-30iZtAPgz+LTIYoeivqYo853f02jBYSd5uGnGpkFV0M3xOt9aN73erkgYAmZU43x4VfqcnLxW9Kpg3R5LC4YYw==}
     engines: {node: '>=6.0.0'}
 
-  '@anycable/core@1.0.0':
-    resolution: {integrity: sha512-u5A8nR7dq8/vp5+HWLeYhbBJqQcXylUsQ3U0rOarQxI3bY67zEhxe22XnYA+Pcnj2yvd0WESDUZRHICAtXi7jA==}
+  '@anycable/core@1.1.0':
+    resolution: {integrity: sha512-xvKJu/t1W1AhDvtaQr0B97NWd1eg6q0HZRAaLp4OcqvF4ruNxMkfRQWbRxM90XGGDUOV6hdXTbaqo9L8//lD3Q==}
     engines: {node: '>=18.0.0'}
 
-  '@anycable/web@1.0.0':
-    resolution: {integrity: sha512-ehfM4D7eNHL7GXZISUTr1H4mQ5xKMfyx45mLTxFReT1sxNT+fIi2CiWz1SNB124q0GX/pqZfIHOf96YbsHAVUA==}
+  '@anycable/web@1.1.0':
+    resolution: {integrity: sha512-9PQKW0xZ6zBQR9xqRZELP1POEOw1IYpgPuDSEcpQFH6z5yUAMMMnqhfQBG4GCtnSmAGot6SnItjgCqFJWxhf6Q==}
 
   '@babel/code-frame@7.26.2':
     resolution: {integrity: sha512-RJlIHRueQgwWitWgF8OdFYGZX328Ax5BCemNGlqHfplnRT9ESi8JkFlvaVYbS+UubVY6dpv87Fs2u5M29iNFVQ==}
@@ -2151,13 +2151,13 @@ snapshots:
       '@jridgewell/gen-mapping': 0.3.8
       '@jridgewell/trace-mapping': 0.3.25
 
-  '@anycable/core@1.0.0':
+  '@anycable/core@1.1.0':
     dependencies:
       nanoevents: 9.1.0
 
-  '@anycable/web@1.0.0':
+  '@anycable/web@1.1.0':
     dependencies:
-      '@anycable/core': 1.0.0
+      '@anycable/core': 1.1.0
 
   '@babel/code-frame@7.26.2':
     dependencies:
