@@ -25,7 +25,7 @@ class AccountController < ApplicationController
   end
 
   def companions
-    companions = @account.created_companions.published
+    companions = @account.created_companions.recent.published
     pagy, companions = pagy(companions, limit: COMPANIONS_PER_PAGE)
     render json: { companions: companions, page: pagy_metadata(pagy) }, each_serializer: CompanionSerializer
   end

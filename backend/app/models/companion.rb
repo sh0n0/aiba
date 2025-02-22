@@ -14,6 +14,7 @@ class Companion < ApplicationRecord
   scope :published, -> { where.not(published_at: nil) }
   scope :with_name, ->(name) { where(name: name) }
   scope :created_by, ->(account) { where(creator: account) }
+  scope :recent, -> { order(id: :desc) }
 
   def starred_count
     stars.count
