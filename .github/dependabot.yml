@@ -5,11 +5,19 @@ updates:
     schedule:
       interval: daily
     open-pull-requests-limit: 10
+    ignore:
+      - dependency-name: "*"
+        update-types: [ "version-update:semver-major" ]
+
   - package-ecosystem: bundler
     directory: "/backend"
     schedule:
       interval: daily
     open-pull-requests-limit: 10
+    ignore:
+      - dependency-name: "*"
+        update-types: [ "version-update:semver-major" ]
+
   - package-ecosystem: github-actions
     directory: "/"
     schedule:
