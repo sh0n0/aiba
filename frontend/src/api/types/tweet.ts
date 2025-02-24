@@ -21,4 +21,13 @@ export type TweetResponse = {
     avatarUrl: string;
     createdAt: string;
   };
+  reactions: {
+    emoji: string;
+    count: number;
+    hasReacted: boolean;
+    accounts: {
+      name: string;
+      displayName: string;
+    }[];
+  }[];
 };

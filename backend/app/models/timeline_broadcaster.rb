@@ -22,7 +22,8 @@ class TimelineBroadcaster
         name: account.name,
         displayName: account.display_name,
         avatarUrl: account.avatar_url
-      }
+      },
+      reactions: []
     })
   end
 end

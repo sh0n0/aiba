@@ -1,6 +1,9 @@
 require "sidekiq/web"
 
 Rails.application.routes.draw do
+  post "tweets/:tweet_id/reactions", to: "reactions#create"
+  delete "tweets/:tweet_id/reactions", to: "reactions#destroy"
+
   post "companions/:account_name/:companion_name/star", to: "companion_stars#create"
   delete "companions/:account_name/:companion_name/star", to: "companion_stars#destroy"
 

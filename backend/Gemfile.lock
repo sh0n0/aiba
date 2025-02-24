@@ -467,6 +467,7 @@ DEPENDENCIES
   solid_queue
   thruster
   tzinfo-data
+  unicode-emoji
   vcr (~> 6.3, >= 6.3.1)
   webmock
 

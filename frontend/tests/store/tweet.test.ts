@@ -33,6 +33,7 @@ describe("TimelineSlice", () => {
       avatarUrl: "https://example.com/avatar.png",
       createdAt: "2025-01-01T00:00:00Z",
     },
+    reactions: [],
   };
 
   describe("addTweet", () => {
@@ -97,6 +98,278 @@ describe("TimelineSlice", () => {
       const timeline = store.getState().timeline;
       expect(timeline[timeline.length - 1].id).toEqual(tweet2.id);
       expect(timeline).toHaveLength(2);
+    });
+  });
+
+  describe("attachReaction", () => {
+    it("should attach a reaction to a tweet", () => {
+      const store = useAppStore;
+      const tweet: Tweet = { ...sampleTweet, id: 1, text: "Tweet 1" };
+      const reaction = {
+        emoji: "👍",
+        account: null,
+      };
+
+      store.getState().addTweet(tweet);
+      store.getState().attachReaction(tweet.id, reaction);
+
+      const updatedTweet = store.getState().timeline.find((t) => t.id === tweet.id);
+      expect(updatedTweet?.reactions).toHaveLength(1);
+      expect(updatedTweet?.reactions[0].emoji).toEqual(reaction.emoji);
+      expect(updatedTweet?.reactions[0].count).toEqual(1);
+      expect(updatedTweet?.reactions[0].hasReacted).toEqual(true);
+      expect(updatedTweet?.reactions[0].accounts).toHaveLength(0);
+    });
+
+    it("should attach a reaction to a tweet with an account", () => {
+      const store = useAppStore;
+      const tweet: Tweet = { ...sampleTweet, id: 1, text: "Tweet 1" };
+      const reaction = {
+        emoji: "👍",
+        account: {
+          name: "AccountName",
+          displayName: "Account Display Name",
+        },
+      };
+
+      store.getState().addTweet(tweet);
+      store.getState().attachReaction(tweet.id, reaction);
+
+      const updatedTweet = store.getState().timeline.find((t) => t.id === tweet.id);
+      expect(updatedTweet?.reactions[0].accounts[0]).toEqual(reaction.account);
+    });
+
+    it("should attach a reaction and icrement the count if the reaction already exists", () => {
+      const store = useAppStore;
+      const tweet: Tweet = {
+        ...sampleTweet,
+        id: 1,
+        text: "Tweet 1",
+        reactions: [
+          {
+            emoji: "👍",
+            count: 1,
+            hasReacted: false,
+            accounts: [{ name: "AccountName", displayName: "Account Display Name" }],
+          },
+        ],
+      };
+      const reaction = {
+        emoji: "👍",
+        account: null,
+      };
+
+      store.getState().addTweet(tweet);
+      store.getState().attachReaction(tweet.id, reaction);
+
+      const updatedTweet = store.getState().timeline.find((t) => t.id === tweet.id);
+      expect(updatedTweet?.reactions[0].count).toEqual(2);
+      expect(updatedTweet?.reactions[0].hasReacted).toEqual(true);
+      expect(updatedTweet?.reactions[0].accounts[0]).toEqual(tweet.reactions[0].accounts[0]);
+    });
+
+    it("should attach a new reaction if the reaction already exists with a different emoji", () => {
+      const store = useAppStore;
+      const tweet: Tweet = {
+        ...sampleTweet,
+        id: 1,
+        text: "Tweet 1",
+        reactions: [
+          {
+            emoji: "👍",
+            count: 1,
+            hasReacted: false,
+            accounts: [{ name: "AccountName", displayName: "Account Display Name" }],
+          },
+        ],
+      };
+      const reaction = {
+        emoji: "👎",
+        account: null,
+      };
+
+      store.getState().addTweet(tweet);
+      store.getState().attachReaction(tweet.id, reaction);
+
+      const updatedTweet = store.getState().timeline.find((t) => t.id === tweet.id);
+      expect(updatedTweet?.reactions).toHaveLength(2);
+      expect(updatedTweet?.reactions[0]).toEqual(tweet.reactions[0]);
+      expect(updatedTweet?.reactions[1].emoji).toEqual(reaction.emoji);
+      expect(updatedTweet?.reactions[1].count).toEqual(1);
+      expect(updatedTweet?.reactions[1].hasReacted).toEqual(true);
+      expect(updatedTweet?.reactions[1].accounts).toHaveLength(0);
+    });
+
+    it("should ignore duplicate reactions by the emoji picker", () => {
+      const store = useAppStore;
+      const tweet: Tweet = {
+        ...sampleTweet,
+        id: 1,
+        text: "Tweet 1",
+        reactions: [{ emoji: "👍", count: 1, hasReacted: true, accounts: [] }],
+      };
+      const reaction = {
+        emoji: "👍",
+        account: null,
+      };
+
+      store.getState().addTweet(tweet);
+      store.getState().attachReaction(tweet.id, reaction);
+
+      const updatedTweet = store.getState().timeline.find((t) => t.id === tweet.id);
+      expect(updatedTweet).toEqual(tweet);
+    });
+
+    it("should ignore duplicate reactions by the same account", () => {
+      const store = useAppStore;
+      const account = {
+        name: "AccountName",
+        displayName: "Account Display Name",
+      };
+      const tweet: Tweet = {
+        ...sampleTweet,
+        id: 1,
+        text: "Tweet 1",
+        reactions: [{ emoji: "👍", count: 1, hasReacted: false, accounts: [account] }],
+      };
+      const reaction = {
+        emoji: "👍",
+        account: account,
+      };
+
+      store.getState().addTweet(tweet);
+      store.getState().attachReaction(tweet.id, reaction);
+
+      const updatedTweet = store.getState().timeline.find((t) => t.id === tweet.id);
+      expect(updatedTweet).toEqual(tweet);
+    });
+  });
+
+  describe("detachReaction", () => {
+    it("should detach a reaction from a tweet", () => {
+      const store = useAppStore;
+      const tweet: Tweet = {
+        ...sampleTweet,
+        id: 1,
+        text: "Tweet 1",
+        reactions: [
+          {
+            emoji: "👍",
+            count: 2,
+            hasReacted: true,
+            accounts: [{ name: "AccountName", displayName: "Account Display Name" }],
+          },
+        ],
+      };
+      const reaction = {
+        emoji: "👍",
+        account: null,
+      };
+
+      store.getState().addTweet(tweet);
+      store.getState().detachReaction(tweet.id, reaction);
+
+      const updatedTweet = store.getState().timeline.find((t) => t.id === tweet.id);
+      expect(updatedTweet?.reactions[0].count).toEqual(1);
+      expect(updatedTweet?.reactions[0].hasReacted).toEqual(false);
+      expect(updatedTweet?.reactions[0].accounts).toHaveLength(1);
+    });
+
+    it("should detach a reaction from a tweet with an account", () => {
+      const store = useAppStore;
+      const account = {
+        name: "AccountName",
+        displayName: "Account Display Name",
+      };
+      const tweet: Tweet = {
+        ...sampleTweet,
+        id: 1,
+        text: "Tweet 1",
+        reactions: [{ emoji: "👍", count: 2, hasReacted: true, accounts: [account] }],
+      };
+      const reaction = {
+        emoji: "👍",
+        account: account,
+      };
+
+      store.getState().addTweet(tweet);
+      store.getState().detachReaction(tweet.id, reaction);
+
+      const updatedTweet = store.getState().timeline.find((t) => t.id === tweet.id);
+      expect(updatedTweet?.reactions[0].count).toEqual(1);
+      expect(updatedTweet?.reactions[0].hasReacted).toEqual(true);
+      expect(updatedTweet?.reactions[0].accounts).toHaveLength(0);
+    });
+
+    it("should detach a reaction and remove the reaction if the count is 1", () => {
+      const store = useAppStore;
+      const tweet: Tweet = {
+        ...sampleTweet,
+        id: 1,
+        text: "Tweet 1",
+        reactions: [{ emoji: "👍", count: 1, hasReacted: true, accounts: [] }],
+      };
+      const reaction = {
+        emoji: "👍",
+        account: null,
+      };
+
+      store.getState().addTweet(tweet);
+      store.getState().detachReaction(tweet.id, reaction);
+
+      const updatedTweet = store.getState().timeline.find((t) => t.id === tweet.id);
+      expect(updatedTweet?.reactions).toHaveLength(0);
+    });
+
+    it("should not detach a reaction if the account is not present", () => {
+      const store = useAppStore;
+      const account = {
+        name: "AccountName",
+        displayName: "Account Display Name",
+      };
+      const tweet: Tweet = {
+        ...sampleTweet,
+        id: 1,
+        text: "Tweet 1",
+        reactions: [{ emoji: "👍", count: 1, hasReacted: true, accounts: [account] }],
+      };
+      const reaction = {
+        emoji: "👍",
+        account: {
+          name: "AnotherAccount",
+          displayName: "Another Account Display Name",
+        },
+      };
+
+      store.getState().addTweet(tweet);
+      store.getState().detachReaction(tweet.id, reaction);
+
+      const updatedTweet = store.getState().timeline.find((t) => t.id === tweet.id);
+      expect(updatedTweet).toEqual(tweet);
+    });
+
+    it("should not detach a reaction if the emoji is not present", () => {
+      const store = useAppStore;
+      const account = {
+        name: "AccountName",
+        displayName: "Account Display Name",
+      };
+      const tweet: Tweet = {
+        ...sampleTweet,
+        id: 1,
+        text: "Tweet 1",
+        reactions: [{ emoji: "👍", count: 1, hasReacted: true, accounts: [account] }],
+      };
+      const reaction = {
+        emoji: "👎",
+        account: account,
+      };
+
+      store.getState().addTweet(tweet);
+      store.getState().detachReaction(tweet.id, reaction);
+
+      const updatedTweet = store.getState().timeline.find((t) => t.id === tweet.id);
+      expect(updatedTweet).toEqual(tweet);
     });
   });
 });

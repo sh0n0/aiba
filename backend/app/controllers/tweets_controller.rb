@@ -3,9 +3,9 @@ class TweetsController < ApplicationController
   before_action :set_tweet, only: %i[ show destroy ]
 
   def index
-    tweets = Tweet.recent.eager_load(:account, companion_comment: { companion: :creator })
+    tweets = Tweet.recent.eager_load(:account, companion_comment: { companion: :creator }, reactions: :account)
     _, tweets = pagy(tweets, limit: TWEETS_PER_PAGE)
-    render json: tweets, each_serializer: TweetSerializer
+    render json: tweets, each_serializer: TweetSerializer, current_account: current_user&.account
   end
 
   def show

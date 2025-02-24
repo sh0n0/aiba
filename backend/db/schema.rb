@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_02_20_152733) do
+ActiveRecord::Schema[8.0].define(version: 2025_02_23_111129) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -118,6 +118,18 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_20_152733) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "reactions", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.string "reactable_type", null: false
+    t.bigint "reactable_id", null: false
+    t.string "emoji", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id", "reactable_type", "reactable_id", "emoji"], name: "idx_on_account_id_reactable_type_reactable_id_emoji_3be4427d81", unique: true
+    t.index ["account_id"], name: "index_reactions_on_account_id"
+    t.index ["reactable_type", "reactable_id"], name: "index_reactions_on_reactable"
+  end
+
   create_table "tweets", force: :cascade do |t|
     t.text "text", null: false
     t.bigint "account_id", null: false
@@ -161,6 +173,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_20_152733) do
   add_foreign_key "companion_tool_params", "companion_tools"
   add_foreign_key "companion_tools", "companions"
   add_foreign_key "companions", "accounts", column: "created_by"
+  add_foreign_key "reactions", "accounts"
   add_foreign_key "tweets", "accounts"
   add_foreign_key "users", "accounts"
 end
