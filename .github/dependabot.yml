@@ -3,7 +3,7 @@ updates:
   - package-ecosystem: npm
     directory: "/frontend"
     schedule:
-      interval: daily
+      interval: weekly
     open-pull-requests-limit: 10
     ignore:
       - dependency-name: "*"
@@ -12,7 +12,7 @@ updates:
   - package-ecosystem: bundler
     directory: "/backend"
     schedule:
-      interval: daily
+      interval: weekly
     open-pull-requests-limit: 10
     ignore:
       - dependency-name: "*"
