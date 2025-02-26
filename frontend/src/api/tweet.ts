@@ -16,7 +16,10 @@ export async function tweetsFetcher(url: string): Promise<TweetResponse[]> {
   return await res.json();
 }
 
-export async function postTweetFetcher(_: string, { arg }: { arg: { text: string } }) {
+export async function postTweetFetcher(
+  _: string,
+  { arg }: { arg: { text: string; companion: { name: string; creator: { name: string } } | null } },
+) {
   const { uid, client, accessToken } = useAppStore.getState().getAuth();
 
   const res = await fetch(`${API_BASE}/tweets`, {

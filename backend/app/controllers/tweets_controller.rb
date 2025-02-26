@@ -1,3 +1,4 @@
+# noinspection RubyNilAnalysis
 class TweetsController < ApplicationController
   before_action :authenticate_user!, only: %i[ create destroy ]
   before_action :set_tweet, only: %i[ show destroy ]
@@ -13,16 +14,13 @@ class TweetsController < ApplicationController
   end
 
   def create
-    account = current_user.account
-    tweet = Tweet.new(tweet_params.merge(account: account))
-
-    if tweet.save
-      companion = account.default_companion
-      MakeCompanionCommentJob.perform_async(companion.id, tweet.id) if companion.present?
-
-      render json: tweet, status: :created, location: tweet
-    else
-      render json: tweet.errors, status: :unprocessable_entity
+    begin
+      tweet = TweetCreationService.new(current_user.account, tweet_params).call
+      render json: tweet, status: :created, serializer: TweetSerializer
+    rescue ActiveRecord::RecordNotFound => e
+      render json: { error: e.message }, status: :not_found and return
+    rescue StandardError => e
+      render json: { error: e.message }, status: :unprocessable_entity and return
     end
   end
 
@@ -37,6 +35,16 @@ class TweetsController < ApplicationController
   end
 
   def tweet_params
-    params.expect(tweet: [ :text ])
+    if params[:companion].nil?
+      params.require(:tweet).permit(:text)
+    else
+      companion_params = params.require(:companion).permit(:name, creator: [ :name ])
+      tweet_params = params.require(:tweet).permit(:text)
+
+      {
+        text: tweet_params[:text],
+        companion: companion_params
+      }
+    end
   end
 end

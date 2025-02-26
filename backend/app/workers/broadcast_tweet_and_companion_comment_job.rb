@@ -7,6 +7,6 @@ class BroadcastTweetAndCompanionCommentJob
     tweet = Tweet.find(tweet_id)
     companion_comment = CompanionComment.find(companion_comment_id)
 
-    TimelineBroadcaster.broadcast_to_public(tweet, companion_comment)
+    TimelineBroadcaster.broadcast_tweet_and_comment_to_public(tweet, companion_comment)
   end
 end

@@ -15,15 +15,7 @@ import { Separator } from "./ui/separator";
 type TweetCardProps = {
   id: number;
   text: string;
-  companionComment: {
-    text: string;
-    companion: {
-      name: string;
-      creator: {
-        name: string;
-      };
-    };
-  };
+  companionComment: CompanionComment | null;
   account: {
     name: string;
     displayName: string;
@@ -38,6 +30,16 @@ type TweetCardProps = {
       displayName: string;
     }[];
   }[];
+};
+
+type CompanionComment = {
+  text: string;
+  companion: {
+    name: string;
+    creator: {
+      name: string;
+    };
+  };
 };
 
 export const TweetCard = ({ tweet }: { tweet: TweetCardProps }) => {
@@ -117,17 +119,7 @@ export const TweetCard = ({ tweet }: { tweet: TweetCardProps }) => {
               </CardHeader>
               <CardContent>
                 <p>{tweet.text}</p>
-                <Separator className="mt-8 mb-4" />
-                <Link
-                  to={"/$accountName/$companionName"}
-                  params={{
-                    accountName: `@${tweet.companionComment.companion.creator.name}`,
-                    companionName: tweet.companionComment.companion.name,
-                  }}
-                >
-                  {tweet.companionComment.companion.name}
-                </Link>
-                <p className="mt-4">{tweet.companionComment.text}</p>
+                {tweet.companionComment && <CompanionCommentComponent companionComment={tweet.companionComment} />}
                 {tweet.reactions.length > 0 && (
                   <div className="mt-8">
                     <EmojiReactions reactions={tweet.reactions} onToggleReaction={handleToggleReaction} />
@@ -162,6 +154,24 @@ export const TweetCard = ({ tweet }: { tweet: TweetCardProps }) => {
           )}
         </PopoverContent>
       </Popover>
+    </div>
+  );
+};
+
+const CompanionCommentComponent = ({ companionComment }: { companionComment: CompanionComment }) => {
+  return (
+    <div>
+      <Separator className="mt-8 mb-4" />
+      <Link
+        to="/$accountName/$companionName"
+        params={{
+          accountName: `@${companionComment.companion.creator.name}`,
+          companionName: companionComment.companion.name,
+        }}
+      >
+        {companionComment.companion.name}
+      </Link>
+      <p className="mt-4">{companionComment.text}</p>
     </div>
   );
 };

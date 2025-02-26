@@ -27,6 +27,14 @@ class Account < ApplicationRecord
     owned_companions.find_by(companion_ownerships: { is_default: true })
   end
 
+  def find_available_companion!(companion_name:, creator_name:)
+    creator = Account.find_by!(name: creator_name)
+    owned_companions
+      .with_name(companion_name)
+      .created_by(creator)
+      .first!
+  end
+
   def companions_count
     created_companions.published.count
   end

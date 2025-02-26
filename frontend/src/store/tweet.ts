@@ -27,23 +27,25 @@ export type Reaction = {
   }[];
 };
 
+type CompanionComment = {
+  id: number;
+  text: string;
+  companion: {
+    name: string;
+    description: string;
+    publishedAt: string | null;
+    creator: {
+      name: string;
+      displayName: string;
+      createdAt: string;
+    };
+  };
+};
+
 export type Tweet = {
   id: number;
   text: string;
-  companionComment: {
-    id: number;
-    text: string;
-    companion: {
-      name: string;
-      description: string;
-      publishedAt: string | null;
-      creator: {
-        name: string;
-        displayName: string;
-        createdAt: string;
-      };
-    };
-  };
+  companionComment: CompanionComment | null;
   account: {
     name: string;
     displayName: string;
