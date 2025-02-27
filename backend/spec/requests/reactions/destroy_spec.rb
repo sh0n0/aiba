@@ -1,7 +1,16 @@
+require 'sidekiq/testing'
 require 'rails_helper'
 
 RSpec.describe ReactionsController, type: :request do
   describe 'DELETE /tweets/:tweet_id/reactions' do
+    before do
+      Sidekiq::Testing.fake!
+    end
+
+    after do
+      Sidekiq::Worker.clear_all
+    end
+
     let!(:account) { create(:account) }
     let!(:user) { create(:user, account: account) }
 
@@ -12,12 +21,11 @@ RSpec.describe ReactionsController, type: :request do
     let!(:reaction3) { create(:reaction, reactable: tweet, account: account, emoji: '👎') }
 
     context 'when the tweet exists' do
-      it 'deletes the correct reaction' do
-        delete "/tweets/#{tweet.id}/reactions", headers: auth_headers(user), params: { reaction: { emoji: '👍' } }
+      it 'executes the job' do
+        expect {
+          delete "/tweets/#{tweet.id}/reactions", headers: auth_headers(user), params: { reaction: { emoji: '👍' } }
+        }.to change(BroadcastReactionJob.jobs, :size).by(1)
         expect(response).to have_http_status(204)
-        expect(tweet.reactions.where(account: account, emoji: '👍').count).to eq(0)
-        expect(tweet.reactions.where(emoji: '👍', account: other_account).count).to eq(1)
-        expect(tweet.reactions.where(emoji: '👎', account: account).count).to eq(1)
       end
     end
 

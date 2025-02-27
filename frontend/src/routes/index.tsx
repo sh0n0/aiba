@@ -1,3 +1,4 @@
+import { myAccountFetcher } from "@/api/account";
 import { fetchOwnedCompanionsFetcher } from "@/api/companion";
 import { postTweetFetcher, tweetsFetcher } from "@/api/tweet.ts";
 import type { TweetResponse } from "@/api/types";
@@ -9,9 +10,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea.tsx";
 import { ACCOUNT_TWEET_PAGE_SIZE, API_BASE } from "@/constants/api";
 import { useInfiniteLoading } from "@/hooks/useInfiniteLoading";
+import { TimelineMessageDispatcher } from "@/lib/TimelineMessageDispatcher";
 import { redirectToLoginIfUnauthorized } from "@/lib/utils.ts";
 import { useAppStore } from "@/store/store.ts";
-import type { Tweet } from "@/store/tweet.ts";
 import { createCable } from "@anycable/web";
 import { createFileRoute } from "@tanstack/react-router";
 import { LoaderCircle } from "lucide-react";
@@ -30,10 +31,13 @@ function Index() {
   const timeline = useAppStore((state) => state.timeline);
   const addTweet = useAppStore((state) => state.addTweet);
   const appendTweet = useAppStore((state) => state.appendTweet);
+  const attachReaction = useAppStore((state) => state.attachReaction);
+  const detachReaction = useAppStore((state) => state.detachReaction);
 
   const form = useForm({ defaultValues: { text: "", companion: "" } });
   const { trigger, isMutating, error } = useSWRMutation("tweets", postTweetFetcher);
   const { data: ownedCompanions } = useSWR("owned_companions", fetchOwnedCompanionsFetcher);
+  const { data: myAccount } = useSWR("settings/profile", myAccountFetcher);
 
   const { data: tweets, setSize } = useSWRInfinite((pageIndex: number, previousPageData: TweetResponse[]) => {
     if (previousPageData && previousPageData.length < ACCOUNT_TWEET_PAGE_SIZE) return null;
@@ -57,16 +61,21 @@ function Index() {
     });
     const signedName = "InRpbWVsaW5lL3B1YmxpYyI=--e0700d7670d753a8d1c0a1948ccc102d7ac94fc26c9e0b84b434d64222e3ca6a";
     const publicChannel = cable.streamFromSigned(signedName);
+    const timelineMessageDispatcher = new TimelineMessageDispatcher(
+      myAccount?.name,
+      addTweet,
+      attachReaction,
+      detachReaction,
+    );
 
-    publicChannel.on("message", (message) => {
-      console.log("Received message:", message);
-      addTweet(message as Tweet);
+    publicChannel.on("message", (receivedMessage) => {
+      timelineMessageDispatcher.dispatch(receivedMessage);
     });
 
     return () => {
       publicChannel.disconnect();
     };
-  }, [addTweet]);
+  }, [addTweet, attachReaction, detachReaction, myAccount]);
 
   const onSubmitTweet = async (data: { text: string; companion: string }) => {
     const { text, companion: companionName } = data;

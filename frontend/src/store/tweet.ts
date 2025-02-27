@@ -27,7 +27,7 @@ export type Reaction = {
   }[];
 };
 
-type CompanionComment = {
+export type CompanionComment = {
   id: number;
   text: string;
   companion: {

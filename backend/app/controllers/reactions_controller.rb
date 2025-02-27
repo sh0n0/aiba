@@ -8,6 +8,7 @@ class ReactionsController < ApplicationController
     if reaction.persisted?
       render json: {}, status: :conflict
     elsif reaction.save
+      BroadcastReactionJob.perform_async(reaction.id, "attach")
       render json: {}, status: :created
     else
       render json: {}, status: :unprocessable_entity
@@ -18,7 +19,7 @@ class ReactionsController < ApplicationController
     reaction = @tweet.reactions.find_by(account: current_user.account, emoji: reaction_params[:emoji])
 
     if reaction
-      reaction.destroy
+      BroadcastReactionJob.perform_async(reaction.id, "detach")
       render json: {}, status: :no_content
     else
       render json: {}, status: :not_found

@@ -6,6 +6,7 @@ class TimelineBroadcaster
     companion = companion_comment.companion
 
     ActionCable.server.broadcast("timeline/public", {
+      type: "tweet",
       id: tweet.id,
       text: tweet.text,
       companionComment: {
@@ -32,6 +33,7 @@ class TimelineBroadcaster
     account = tweet.account
 
     ActionCable.server.broadcast("timeline/public", {
+      type: "tweet",
       id: tweet.id,
       text: tweet.text,
       companionComment: nil,
@@ -41,6 +43,21 @@ class TimelineBroadcaster
         avatarUrl: account.avatar_url
       },
       reactions: []
+    })
+  end
+
+  # @param [Reaction] reaction
+  # @param [String] action_type
+  def self.broadcast_reaction_to_public(reaction, action_type)
+    ActionCable.server.broadcast("timeline/public", {
+      type: "reaction",
+      action: action_type,
+      tweetId: reaction.reactable_id,
+      emoji: reaction.emoji,
+      account: {
+        name: reaction.account.name,
+        displayName: reaction.account.display_name
+      }
     })
   end
 end
