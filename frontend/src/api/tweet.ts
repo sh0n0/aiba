@@ -19,7 +19,7 @@ export async function tweetsFetcher(url: string): Promise<TweetResponse[]> {
 
 export async function postTweetFetcher(
   _: string,
-  { arg }: { arg: { text: string; companion: { creatorName: string; companionName: string } | null } },
+  { arg }: { arg: { tweet: { text: string }; companion: { creatorName: string; companionName: string } | null } },
 ) {
   const { uid, client, accessToken } = useAppStore.getState().getAuth();
 
@@ -32,7 +32,7 @@ export async function postTweetFetcher(
       "access-token": accessToken,
     },
 
-    body: JSON.stringify(toSnakeCase({ arg })),
+    body: JSON.stringify(toSnakeCase(toSnakeCase(arg))),
   });
   if (!res.ok) {
     throw new Error("Post tweet failed");
