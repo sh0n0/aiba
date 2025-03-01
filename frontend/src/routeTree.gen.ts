@@ -13,8 +13,10 @@
 import { Route as rootRoute } from './routes/__root'
 import { Route as LoginImport } from './routes/login'
 import { Route as IndexImport } from './routes/index'
+import { Route as ToolIndexImport } from './routes/tool/index'
 import { Route as CompanionIndexImport } from './routes/companion/index'
 import { Route as AccountNameIndexImport } from './routes/$accountName/index'
+import { Route as ToolCreateImport } from './routes/tool/create'
 import { Route as SettingsProfileImport } from './routes/settings/profile'
 import { Route as CompanionCreateImport } from './routes/companion/create'
 import { Route as AccountNameCompanionsImport } from './routes/$accountName/companions'
@@ -34,6 +36,12 @@ const IndexRoute = IndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const ToolIndexRoute = ToolIndexImport.update({
+  id: '/tool/',
+  path: '/tool/',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const CompanionIndexRoute = CompanionIndexImport.update({
   id: '/companion/',
   path: '/companion/',
@@ -43,6 +51,12 @@ const CompanionIndexRoute = CompanionIndexImport.update({
 const AccountNameIndexRoute = AccountNameIndexImport.update({
   id: '/$accountName/',
   path: '/$accountName/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const ToolCreateRoute = ToolCreateImport.update({
+  id: '/tool/create',
+  path: '/tool/create',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -116,6 +130,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SettingsProfileImport
       parentRoute: typeof rootRoute
     }
+    '/tool/create': {
+      id: '/tool/create'
+      path: '/tool/create'
+      fullPath: '/tool/create'
+      preLoaderRoute: typeof ToolCreateImport
+      parentRoute: typeof rootRoute
+    }
     '/$accountName/': {
       id: '/$accountName/'
       path: '/$accountName'
@@ -130,6 +151,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CompanionIndexImport
       parentRoute: typeof rootRoute
     }
+    '/tool/': {
+      id: '/tool/'
+      path: '/tool'
+      fullPath: '/tool'
+      preLoaderRoute: typeof ToolIndexImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -142,8 +170,10 @@ export interface FileRoutesByFullPath {
   '/$accountName/companions': typeof AccountNameCompanionsRoute
   '/companion/create': typeof CompanionCreateRoute
   '/settings/profile': typeof SettingsProfileRoute
+  '/tool/create': typeof ToolCreateRoute
   '/$accountName': typeof AccountNameIndexRoute
   '/companion': typeof CompanionIndexRoute
+  '/tool': typeof ToolIndexRoute
 }
 
 export interface FileRoutesByTo {
@@ -153,8 +183,10 @@ export interface FileRoutesByTo {
   '/$accountName/companions': typeof AccountNameCompanionsRoute
   '/companion/create': typeof CompanionCreateRoute
   '/settings/profile': typeof SettingsProfileRoute
+  '/tool/create': typeof ToolCreateRoute
   '/$accountName': typeof AccountNameIndexRoute
   '/companion': typeof CompanionIndexRoute
+  '/tool': typeof ToolIndexRoute
 }
 
 export interface FileRoutesById {
@@ -165,8 +197,10 @@ export interface FileRoutesById {
   '/$accountName/companions': typeof AccountNameCompanionsRoute
   '/companion/create': typeof CompanionCreateRoute
   '/settings/profile': typeof SettingsProfileRoute
+  '/tool/create': typeof ToolCreateRoute
   '/$accountName/': typeof AccountNameIndexRoute
   '/companion/': typeof CompanionIndexRoute
+  '/tool/': typeof ToolIndexRoute
 }
 
 export interface FileRouteTypes {
@@ -178,8 +212,10 @@ export interface FileRouteTypes {
     | '/$accountName/companions'
     | '/companion/create'
     | '/settings/profile'
+    | '/tool/create'
     | '/$accountName'
     | '/companion'
+    | '/tool'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -188,8 +224,10 @@ export interface FileRouteTypes {
     | '/$accountName/companions'
     | '/companion/create'
     | '/settings/profile'
+    | '/tool/create'
     | '/$accountName'
     | '/companion'
+    | '/tool'
   id:
     | '__root__'
     | '/'
@@ -198,8 +236,10 @@ export interface FileRouteTypes {
     | '/$accountName/companions'
     | '/companion/create'
     | '/settings/profile'
+    | '/tool/create'
     | '/$accountName/'
     | '/companion/'
+    | '/tool/'
   fileRoutesById: FileRoutesById
 }
 
@@ -210,8 +250,10 @@ export interface RootRouteChildren {
   AccountNameCompanionsRoute: typeof AccountNameCompanionsRoute
   CompanionCreateRoute: typeof CompanionCreateRoute
   SettingsProfileRoute: typeof SettingsProfileRoute
+  ToolCreateRoute: typeof ToolCreateRoute
   AccountNameIndexRoute: typeof AccountNameIndexRoute
   CompanionIndexRoute: typeof CompanionIndexRoute
+  ToolIndexRoute: typeof ToolIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -221,8 +263,10 @@ const rootRouteChildren: RootRouteChildren = {
   AccountNameCompanionsRoute: AccountNameCompanionsRoute,
   CompanionCreateRoute: CompanionCreateRoute,
   SettingsProfileRoute: SettingsProfileRoute,
+  ToolCreateRoute: ToolCreateRoute,
   AccountNameIndexRoute: AccountNameIndexRoute,
   CompanionIndexRoute: CompanionIndexRoute,
+  ToolIndexRoute: ToolIndexRoute,
 }
 
 export const routeTree = rootRoute
@@ -241,8 +285,10 @@ export const routeTree = rootRoute
         "/$accountName/companions",
         "/companion/create",
         "/settings/profile",
+        "/tool/create",
         "/$accountName/",
-        "/companion/"
+        "/companion/",
+        "/tool/"
       ]
     },
     "/": {
@@ -263,11 +309,17 @@ export const routeTree = rootRoute
     "/settings/profile": {
       "filePath": "settings/profile.tsx"
     },
+    "/tool/create": {
+      "filePath": "tool/create.tsx"
+    },
     "/$accountName/": {
       "filePath": "$accountName/index.tsx"
     },
     "/companion/": {
       "filePath": "companion/index.tsx"
+    },
+    "/tool/": {
+      "filePath": "tool/index.tsx"
     }
   }
 }

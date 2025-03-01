@@ -1,10 +1,12 @@
 class Companion < ApplicationRecord
   belongs_to :creator, class_name: "Account", foreign_key: :created_by
 
+  has_many :companion_companion_tools
+  has_many :companion_tools, through: :companion_companion_tools
+
   has_many :companion_ownerships
   has_many :owners, through: :companion_ownerships, source: :account
   has_many :companion_comments
-  has_many :companion_tools
   has_many :stars, class_name: "CompanionStar"
 
   validates :name, presence: true

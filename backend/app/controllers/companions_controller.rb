@@ -29,19 +29,8 @@ class CompanionsController < ApplicationController
       prompt: companion_params[:prompt],
       creator: current_user.account
     )
+    companion.companion_tools << CompanionTool.find_by_account_and_tool_pairs!(companion_params[:tools])
     current_user.account.owned_companions << companion
-
-    companion_params[:tools].each do |tool|
-      companion_tool = CompanionTool.create!(
-        name: tool[:name],
-        description: tool[:description],
-        url: tool[:url],
-        companion: companion
-      )
-      tool[:params].each do |param|
-        CompanionToolParam.create!(param.merge(companion_tool_id: companion_tool.id))
-      end
-    end
 
     if companion.save
       render json: companion, status: :created, location: companion
@@ -104,7 +93,7 @@ class CompanionsController < ApplicationController
       :description,
       :prompt,
       tools: [
-        [ :name, :description, :url, [ params: [ [ :name, :description, :param_type ] ] ] ]
+        [ [ :creator_name, :tool_name ] ]
       ]
     ])
   end

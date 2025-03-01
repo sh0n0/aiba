@@ -14,6 +14,13 @@ Rails.application.routes.draw do
   post "companions/:account_name/:companion_name/publish", to: "companions#publish"
   post "companions/:account_name/:companion_name/unpublish", to: "companions#unpublish"
 
+  resources :companion_tools, only: [ :index, :create ], path: "tools" do
+    get :owned, on: :collection
+  end
+  get "tools/:account_name/:companion_tool_name", to: "companion_tools#show"
+  put "tools/:account_name/:companion_tool_name", to: "companion_tools#update"
+  delete "tools/:account_name/:companion_tool_name", to: "companion_tools#destroy"
+
   resources :tweets
 
   get "account/my", to: "account#my"

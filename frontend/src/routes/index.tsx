@@ -81,7 +81,7 @@ function Index() {
     const { text, companion: companionName } = data;
     const selectedCompanion = ownedCompanions?.find((c) => c.name === companionName) || null;
     const param = selectedCompanion
-      ? { text, companion: { name: selectedCompanion.name, creator: { name: selectedCompanion.creator.name } } }
+      ? { text, companion: { creatorName: selectedCompanion.creator.name, companionName: selectedCompanion.name } }
       : { text, companion: null };
 
     await trigger(param);

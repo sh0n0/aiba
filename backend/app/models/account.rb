@@ -2,9 +2,13 @@ class Account < ApplicationRecord
   has_one :user, inverse_of: :account
   has_many :tweets
   has_many :created_companions, class_name: "Companion", foreign_key: :created_by
+  has_many :created_companion_tools, class_name: "CompanionTool", foreign_key: :created_by
 
   has_many :companion_ownerships
   has_many :owned_companions, through: :companion_ownerships, source: :companion
+
+  has_many :companion_tool_ownerships
+  has_many :owned_companion_tools, through: :companion_tool_ownerships, source: :companion_tool
 
   has_many :companion_stars
   has_many :starred_companions, through: :companion_stars, source: :companion

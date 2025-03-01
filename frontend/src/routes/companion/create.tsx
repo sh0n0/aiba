@@ -1,12 +1,16 @@
 import { createCompanionFetcher } from "@/api/companion.ts";
+import { fetchOwnedCompanionToolsFetcher } from "@/api/companionTool";
 import { Button } from "@/components/ui/button.tsx";
-import { Form, FormField, FormLabel } from "@/components/ui/form.tsx";
+import { Card, CardContent } from "@/components/ui/card";
+import { Form, FormField, FormItem, FormLabel } from "@/components/ui/form.tsx";
 import { Input } from "@/components/ui/input.tsx";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select.tsx";
 import { Textarea } from "@/components/ui/textarea.tsx";
 import { redirectToLoginIfUnauthorized } from "@/lib/utils.ts";
 import { createFileRoute } from "@tanstack/react-router";
-import { type Control, useFieldArray, useForm } from "react-hook-form";
+import { Trash2 } from "lucide-react";
+import { useFieldArray, useForm } from "react-hook-form";
+import useSWR from "swr";
 import useSWRMutation from "swr/mutation";
 
 export const Route = createFileRoute("/companion/create")({
@@ -16,19 +20,18 @@ export const Route = createFileRoute("/companion/create")({
 
 function CreateCompanion() {
   return (
-    <div className="flex h-screen flex-col items-center">
+    <div className="mt-12 flex h-screen flex-col items-center">
       <CreateCompanionForm />
     </div>
   );
 }
 
-type ParamType = "string" | "number" | "array" | "boolean";
 type Tool = {
-  name: string;
-  description: string;
-  url: string;
-  params: { param_type: ParamType; name: string; description: string }[];
+  id: string;
+  creatorName: string;
+  toolName: string;
 };
+
 type CompanionFormValues = {
   name: string;
   description: string;
@@ -55,11 +58,27 @@ const CreateCompanionForm = () => {
     name: "tools",
   });
 
+  const { data: ownedTools } = useSWR("tools", fetchOwnedCompanionToolsFetcher);
   const { trigger, isMutating, error } = useSWRMutation("companions", createCompanionFetcher);
 
   const onSubmitCompanion = async (data: { name: string; description: string; prompt: string; tools: Tool[] }) => {
+    if (!ownedTools) {
+      return;
+    }
+
     const { name, description, prompt, tools } = data;
-    await trigger({ name, description, prompt, tools });
+
+    const selectedTools = ownedTools
+      .filter((tool) => {
+        return tools.some((selectedTool) => Number(selectedTool.id) === tool.id);
+      })
+      .map((tool) => {
+        return {
+          creatorName: tool.creator.name,
+          toolName: tool.name,
+        };
+      });
+    await trigger({ name, description, prompt, tools: selectedTools });
   };
 
   return (
@@ -89,9 +108,44 @@ const CreateCompanionForm = () => {
         <div className="space-y-2">
           <h3 className="font-semibold text-lg">Tools</h3>
           {toolFields.map((tool, toolIndex) => (
-            <ToolCard key={tool.id} control={form.control} toolIndex={toolIndex} removeTool={removeTool} />
+            <Card className="relative" key={tool.id}>
+              <CardContent className="pt-6">
+                <div className="grid grid-cols-1 gap-4">
+                  <div className="flex items-center justify-end">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => removeTool(toolIndex)}
+                      className="text-red-500 hover:bg-red-100 hover:text-red-700"
+                    >
+                      <Trash2 size={16} />
+                    </Button>
+                  </div>
+                  <FormItem>
+                    <FormField
+                      control={form.control}
+                      name={`tools.${toolIndex}.id`}
+                      render={({ field }) => (
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <SelectTrigger className="w-[200px]">
+                            <SelectValue placeholder="Select tool" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {ownedTools?.map((tool) => (
+                              <SelectItem key={tool.id} value={tool.id.toString()}>
+                                {tool.creator.name} / {tool.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      )}
+                    />
+                  </FormItem>
+                </div>
+              </CardContent>
+            </Card>
           ))}
-          <Button type="button" onClick={() => appendTool({ name: "", description: "", url: "", params: [] })}>
+          <Button type="button" onClick={() => appendTool({ id: "", creatorName: "", toolName: "" })}>
             Add Tool
           </Button>
         </div>
@@ -102,98 +156,5 @@ const CreateCompanionForm = () => {
         {error && <div className="mt-2 text-red-500">Error: {error.message}</div>}
       </form>
     </Form>
-  );
-};
-
-type ToolCardProps = {
-  control: Control<CompanionFormValues>;
-  toolIndex: number;
-  removeTool: (index: number) => void;
-};
-
-export const ToolCard: React.FC<ToolCardProps> = ({ control, toolIndex, removeTool }) => {
-  const {
-    fields: paramFields,
-    append: appendParam,
-    remove: removeParam,
-  } = useFieldArray({
-    control,
-    name: `tools.${toolIndex}.params`,
-  });
-
-  return (
-    <div className="rounded border p-4">
-      <FormLabel htmlFor={`tools.${toolIndex}.name`}>Tool Name</FormLabel>
-      <FormField
-        control={control}
-        name={`tools.${toolIndex}.name`}
-        render={({ field: { onChange, value } }) => <Input onChange={onChange} value={value} />}
-      />
-
-      <FormLabel htmlFor={`tools.${toolIndex}.description`}>Tool Description</FormLabel>
-      <FormField
-        control={control}
-        name={`tools.${toolIndex}.description`}
-        render={({ field: { onChange, value } }) => <Input onChange={onChange} value={value} />}
-      />
-
-      <FormLabel htmlFor={`tools.${toolIndex}.url`}>Tool URL</FormLabel>
-      <FormField
-        control={control}
-        name={`tools.${toolIndex}.url`}
-        render={({ field: { onChange, value } }) => <Input onChange={onChange} value={value} />}
-      />
-
-      <div className="mt-2 space-y-2">
-        <h4 className="font-medium text-md">Parameters</h4>
-        {paramFields.map((param, paramIndex) => (
-          <div key={param.id} className="rounded border p-2">
-            <FormLabel htmlFor={`tools.${toolIndex}.params.${paramIndex}.name`}>Param Name</FormLabel>
-            <FormField
-              control={control}
-              name={`tools.${toolIndex}.params.${paramIndex}.name`}
-              render={({ field: { onChange, value } }) => <Input onChange={onChange} value={value} />}
-            />
-
-            <FormLabel htmlFor={`tools.${toolIndex}.params.${paramIndex}.paran_type`}>Param Type</FormLabel>
-            <FormField
-              control={control}
-              name={`tools.${toolIndex}.params.${paramIndex}.param_type`}
-              render={({ field: { onChange, value } }) => (
-                <Select onValueChange={onChange} value={value}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="string">String</SelectItem>
-                    <SelectItem value="number">Number</SelectItem>
-                    <SelectItem value="array">Array</SelectItem>
-                    <SelectItem value="boolean">Boolean</SelectItem>
-                  </SelectContent>
-                </Select>
-              )}
-            />
-
-            <FormLabel htmlFor={`tools.${toolIndex}.params.${paramIndex}.description`}>Param Description</FormLabel>
-            <FormField
-              control={control}
-              name={`tools.${toolIndex}.params.${paramIndex}.description`}
-              render={({ field: { onChange, value } }) => <Input onChange={onChange} value={value} />}
-            />
-
-            <Button type="button" variant="destructive" onClick={() => removeParam(paramIndex)}>
-              Remove Parameter
-            </Button>
-          </div>
-        ))}
-        <Button type="button" onClick={() => appendParam({ param_type: "string", name: "", description: "" })}>
-          Add Parameter
-        </Button>
-      </div>
-
-      <Button type="button" variant="destructive" onClick={() => removeTool(toolIndex)}>
-        Remove Tool
-      </Button>
-    </div>
   );
 };

@@ -1,11 +1,13 @@
 import { myAccountFetcher, postAvatarFetcher } from "@/api/account";
 import AvatarUploader from "@/components/AvatarUploader";
+import { redirectToLoginIfUnauthorized } from "@/lib/utils";
 import { createFileRoute } from "@tanstack/react-router";
 import useSWR from "swr";
 import useSWRMutation from "swr/mutation";
 
 export const Route = createFileRoute("/settings/profile")({
   component: Profile,
+  beforeLoad: () => redirectToLoginIfUnauthorized(),
 });
 
 function Profile() {

@@ -1,13 +1,11 @@
 import type { CompanionResponse } from "@/api/types/companion.ts";
 import { API_BASE } from "@/constants/api.ts";
+import { toSnakeCase } from "@/lib/utils";
 import { useAppStore } from "@/store/store.ts";
 
-type ParamType = "string" | "number" | "array" | "boolean";
 type Tool = {
-  name: string;
-  description: string;
-  url: string;
-  params: { param_type: ParamType; name: string; description: string }[];
+  creatorName: string;
+  toolName: string;
 };
 
 export async function createCompanionFetcher(
@@ -24,7 +22,7 @@ export async function createCompanionFetcher(
       client,
       "access-token": accessToken,
     },
-    body: JSON.stringify({ companion: arg }),
+    body: JSON.stringify(toSnakeCase({ companion: arg })),
   });
   if (!res.ok) {
     throw new Error("Create companion failed");

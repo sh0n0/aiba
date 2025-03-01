@@ -16,6 +16,9 @@ export const Route = createRootRoute({
           <Link to="/companion" className="[&.active]:font-bold">
             Companion
           </Link>
+          <Link to="/tool" className="[&.active]:font-bold">
+            Tool
+          </Link>
           <Link to="/settings/profile" className="[&.active]:font-bold">
             Settings
           </Link>

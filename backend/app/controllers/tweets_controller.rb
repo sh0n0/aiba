@@ -1,4 +1,3 @@
-# noinspection RubyNilAnalysis
 class TweetsController < ApplicationController
   before_action :authenticate_user!, only: %i[ create destroy ]
   before_action :set_tweet, only: %i[ show destroy ]
@@ -38,7 +37,7 @@ class TweetsController < ApplicationController
     if params[:companion].nil?
       params.require(:tweet).permit(:text)
     else
-      companion_params = params.require(:companion).permit(:name, creator: [ :name ])
+      companion_params = params.require(:companion).permit(:creator_name, :companion_name)
       tweet_params = params.require(:tweet).permit(:text)
 
       {

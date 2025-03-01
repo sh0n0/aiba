@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_02_23_111129) do
+ActiveRecord::Schema[8.0].define(version: 2025_02_28_061032) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -66,6 +66,16 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_23_111129) do
     t.index ["tweet_id"], name: "index_companion_comments_on_tweet_id"
   end
 
+  create_table "companion_companion_tools", force: :cascade do |t|
+    t.bigint "companion_id", null: false
+    t.bigint "companion_tool_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["companion_id", "companion_tool_id"], name: "idx_on_companion_id_companion_tool_id_1a5b23aa43", unique: true
+    t.index ["companion_id"], name: "index_companion_companion_tools_on_companion_id"
+    t.index ["companion_tool_id"], name: "index_companion_companion_tools_on_companion_tool_id"
+  end
+
   create_table "companion_ownerships", force: :cascade do |t|
     t.bigint "account_id", null: false
     t.bigint "companion_id", null: false
@@ -87,6 +97,15 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_23_111129) do
     t.index ["companion_id"], name: "index_companion_stars_on_companion_id"
   end
 
+  create_table "companion_tool_ownerships", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.bigint "companion_tool_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_companion_tool_ownerships_on_account_id"
+    t.index ["companion_tool_id"], name: "index_companion_tool_ownerships_on_companion_tool_id"
+  end
+
   create_table "companion_tool_params", force: :cascade do |t|
     t.string "name", null: false
     t.string "description", null: false
@@ -101,11 +120,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_23_111129) do
     t.string "name", null: false
     t.string "description", null: false
     t.string "url", null: false
-    t.bigint "companion_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["companion_id"], name: "index_companion_tools_on_companion_id"
-    t.index ["name", "companion_id"], name: "index_companion_tools_on_name_and_companion_id", unique: true
+    t.bigint "created_by", null: false
+    t.index ["name", "created_by"], name: "index_companion_tools_on_name_and_created_by", unique: true
   end
 
   create_table "companions", force: :cascade do |t|
@@ -166,12 +184,16 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_23_111129) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "companion_comments", "companions"
   add_foreign_key "companion_comments", "tweets"
+  add_foreign_key "companion_companion_tools", "companion_tools"
+  add_foreign_key "companion_companion_tools", "companions"
   add_foreign_key "companion_ownerships", "accounts"
   add_foreign_key "companion_ownerships", "companions"
   add_foreign_key "companion_stars", "accounts"
   add_foreign_key "companion_stars", "companions"
+  add_foreign_key "companion_tool_ownerships", "accounts"
+  add_foreign_key "companion_tool_ownerships", "companion_tools"
   add_foreign_key "companion_tool_params", "companion_tools"
-  add_foreign_key "companion_tools", "companions"
+  add_foreign_key "companion_tools", "accounts", column: "created_by"
   add_foreign_key "companions", "accounts", column: "created_by"
   add_foreign_key "reactions", "accounts"
   add_foreign_key "tweets", "accounts"

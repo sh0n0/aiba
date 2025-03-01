@@ -26,7 +26,7 @@ class TweetCreationService
   end
 
   def process_companion_tweet
-    companion = @account.find_available_companion!(companion_name: params[:companion][:name], creator_name: params[:companion][:creator][:name])
+    companion = @account.find_available_companion!(companion_name: params[:companion][:companion_name], creator_name: params[:companion][:creator_name])
     comment = companion.make_comment(tweet)
     BroadcastTweetAndCompanionCommentJob.perform_async(@tweet.id, comment.id)
   end

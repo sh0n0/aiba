@@ -18,7 +18,7 @@ RSpec.describe TweetsController, type: :request do
       context 'with a companion', :vcr do
         let!(:companion) { create(:companion, creator: account) }
         let!(:companion_ownership) { create(:companion_ownership, account: account, companion: companion) }
-        let(:params) { { tweet: { text: 'Hello, world!' }, companion: { name: companion.name, creator: { name: account.name } } } }
+        let(:params) { { tweet: { text: 'Hello, world!' }, companion: { creator_name: account.name, companion_name: companion.name } } }
 
         it 'creates a tweet' do
           expect {
@@ -43,7 +43,7 @@ RSpec.describe TweetsController, type: :request do
       let!(:companion_ownership) { create(:companion_ownership, account: account, companion: companion) }
 
       context 'with an invalid companion creator name' do
-        let(:params) { { tweet: { text: 'Hello, world!' }, companion: { name: companion.name, creator: { name: 'invalid' } } } }
+        let(:params) { { tweet: { text: 'Hello, world!' }, companion: { creator_name: 'invalid', companion_name: companion.name } } }
 
         it 'returns an error' do
           post '/tweets', headers: auth_headers(user), params: params
@@ -53,7 +53,7 @@ RSpec.describe TweetsController, type: :request do
       end
 
       context 'with an invalid companion name' do
-        let(:params) { { tweet: { text: 'Hello, world!' }, companion: { name: 'invalid', creator: { name: account.name } } } }
+        let(:params) { { tweet: { text: 'Hello, world!' }, companion: { creator_name: account.name, companion_name: 'invalid' } } }
 
         it 'returns an error' do
           post '/tweets', headers: auth_headers(user), params: params
