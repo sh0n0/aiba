@@ -4,7 +4,15 @@ import { convertToFormData } from "@/lib/utils";
 import { useAppStore } from "@/store/store.ts";
 
 export async function accountFetcher(_: string, { arg }: { arg: { name: string } }): Promise<AccountResponse> {
-  const res = await fetch(`${API_BASE}/account/${arg.name}`);
+  const { uid, client, accessToken } = useAppStore.getState().getAuth();
+
+  const res = await fetch(`${API_BASE}/account/${arg.name}`, {
+    headers: {
+      uid,
+      client,
+      "access-token": accessToken,
+    },
+  });
   if (!res.ok) {
     throw new Error("Fetch account failed");
   }
@@ -58,7 +66,15 @@ export async function accountCompanionsFetcher(
   _: string,
   { arg }: { arg: { name: string; page: number } },
 ): Promise<CompanionPageResponse> {
-  const res = await fetch(`${API_BASE}/account/${arg.name}/companions?page=${arg.page}`);
+  const { uid, client, accessToken } = useAppStore.getState().getAuth();
+
+  const res = await fetch(`${API_BASE}/account/${arg.name}/companions?page=${arg.page}`, {
+    headers: {
+      uid,
+      client,
+      "access-token": accessToken,
+    },
+  });
   if (!res.ok) {
     throw new Error("Fetch account companions failed");
   }

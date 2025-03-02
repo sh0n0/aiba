@@ -39,12 +39,12 @@ class Account < ApplicationRecord
       .first!
   end
 
-  def companions_count
-    created_companions.published.count
+  def companions_count(account)
+    account == self ? created_companions.count : created_companions.published.count
   end
 
-  def companion_tools_count
-    created_companion_tools.published.count
+  def companion_tools_count(account)
+    account == self ? created_companion_tools.count : created_companion_tools.published.count
   end
 
   private

@@ -67,7 +67,7 @@ RSpec.describe Account, type: :model do
       end
 
       it 'returns the number of companions' do
-        expect(account.companions_count).to eq(2)
+        expect(account.companions_count(account)).to eq(2)
       end
     end
 
@@ -82,7 +82,7 @@ RSpec.describe Account, type: :model do
       end
 
       it 'returns 0' do
-        expect(account.companions_count).to eq(0)
+        expect(account.companions_count(account)).to eq(0)
       end
     end
 
@@ -94,8 +94,16 @@ RSpec.describe Account, type: :model do
         create(:companion_ownership, account: account, companion: companion_2)
       end
 
-      it 'returns 0' do
-        expect(account.companions_count).to eq(0)
+      context 'when the account is the same as the one passed in' do
+        it 'returns the number of companions' do
+          expect(account.companions_count(account)).to eq(2)
+        end
+      end
+
+      context 'when the account is different from the one passed in' do
+        it 'returns 0' do
+          expect(account.companions_count(other_account)).to eq(0)
+        end
       end
     end
   end
@@ -113,7 +121,7 @@ RSpec.describe Account, type: :model do
       end
 
       it 'returns the number of companion tools' do
-        expect(account.companion_tools_count).to eq(2)
+        expect(account.companion_tools_count(account)).to eq(2)
       end
     end
 
@@ -128,7 +136,7 @@ RSpec.describe Account, type: :model do
       end
 
       it 'returns 0' do
-        expect(account.companion_tools_count).to eq(0)
+        expect(account.companion_tools_count(account)).to eq(0)
       end
     end
 
@@ -140,8 +148,16 @@ RSpec.describe Account, type: :model do
         create(:companion_tool_ownership, account: account, companion_tool: tool_2)
       end
 
-      it 'returns 0' do
-        expect(account.companion_tools_count).to eq(0)
+      context 'when the account is the same as the one passed in' do
+        it 'returns the number of companion tools' do
+          expect(account.companion_tools_count(account)).to eq(2)
+        end
+      end
+
+      context 'when the account is different from the one passed in' do
+        it 'returns 0' do
+          expect(account.companion_tools_count(other_account)).to eq(0)
+        end
       end
     end
   end
