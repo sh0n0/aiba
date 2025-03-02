@@ -45,6 +45,9 @@ function Account() {
         <Link to={"/$accountName/companions"} params={{ accountName: accountName }} className="hover:underline">
           {account.companionsCount} companions
         </Link>
+        <Link to={"/$accountName/tools"} params={{ accountName: accountName }} className="hover:underline">
+          {account.companionToolsCount} tools
+        </Link>
       </div>
 
       {tweets.map((page, i) => (

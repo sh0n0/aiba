@@ -99,4 +99,50 @@ RSpec.describe Account, type: :model do
       end
     end
   end
+
+  describe '#companion_tools_count' do
+    let!(:account) { create(:account) }
+    let!(:other_account) { create(:account) }
+
+    context 'when companion tools created by the account are present' do
+      before do
+        tool_1 = create(:companion_tool, creator: account)
+        tool_2 = create(:companion_tool, creator: account)
+        create(:companion_tool_ownership, account: account, companion_tool: tool_1)
+        create(:companion_tool_ownership, account: account, companion_tool: tool_2)
+      end
+
+      it 'returns the number of companion tools' do
+        expect(account.companion_tools_count).to eq(2)
+      end
+    end
+
+    context 'when companion tools created by the account are not present' do
+      before do
+        tool_1 = create(:companion_tool, creator: other_account)
+        tool_2 = create(:companion_tool, creator: other_account)
+        create(:companion_tool_ownership, account: other_account, companion_tool: tool_1)
+        create(:companion_tool_ownership, account: other_account, companion_tool: tool_2)
+        create(:companion_tool_ownership, account: account, companion_tool: tool_1)
+        create(:companion_tool_ownership, account: account, companion_tool: tool_2)
+      end
+
+      it 'returns 0' do
+        expect(account.companion_tools_count).to eq(0)
+      end
+    end
+
+    context 'when companion tools created by the account are not published' do
+      before do
+        tool_1 = create(:companion_tool, creator: account, published_at: nil)
+        tool_2 = create(:companion_tool, creator: account, published_at: nil)
+        create(:companion_tool_ownership, account: account, companion_tool: tool_1)
+        create(:companion_tool_ownership, account: account, companion_tool: tool_2)
+      end
+
+      it 'returns 0' do
+        expect(account.companion_tools_count).to eq(0)
+      end
+    end
+  end
 end

@@ -3,4 +3,5 @@ export type AccountResponse = {
   displayName: string;
   avatarUrl: string;
   companionsCount: number;
+  companionToolsCount: number;
 };

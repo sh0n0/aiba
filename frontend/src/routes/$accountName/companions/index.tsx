@@ -10,12 +10,12 @@ import { Link, createFileRoute, useParams } from "@tanstack/react-router";
 import { useState } from "react";
 import useSWR from "swr";
 
-export const Route = createFileRoute("/$accountName/companions")({
+export const Route = createFileRoute("/$accountName/companions/")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
-  const { accountName } = useParams({ from: "/$accountName/companions" });
+  const { accountName } = useParams({ from: "/$accountName/companions/" });
   const sanitizedAccountName = accountName.replace(/^@/, "");
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -37,7 +37,7 @@ function RouteComponent() {
           <li key={companion.id} className="border-b py-4">
             <div className="flex flex-col">
               <Link
-                to={"/$accountName/$companionName"}
+                to={"/$accountName/companions/$companionName"}
                 params={{
                   accountName: accountName,
                   companionName: companion.name,

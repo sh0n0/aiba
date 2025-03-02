@@ -1,5 +1,5 @@
 class CompanionToolsController < ApplicationController
-  before_action :set_companion_tool, only: %i[show update destroy]
+  before_action :set_companion_tool, only: %i[update destroy]
 
   def index
     # FIXME
@@ -13,7 +13,14 @@ class CompanionToolsController < ApplicationController
   end
 
   def show
-    render json: @companion_tool
+    current_user_account = current_user&.account
+    account = Account.find_by!(name: params[:account_name])
+
+    companion_tool = CompanionTool
+    companion_tool = companion_tool.published unless account == current_user_account
+    companion_tool = companion_tool.created_by(account).with_name(params[:tool_name]).first!
+
+    render json: companion_tool, serializer: CompanionToolDetailSerializer, account: current_user_account
   end
 
   def create

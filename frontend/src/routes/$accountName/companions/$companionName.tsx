@@ -5,7 +5,7 @@ import { useCompanionPublishActions } from "@/hooks/useCompanionPublishActions";
 import { useCompanionStarActions } from "@/hooks/useCompanionStarActions";
 import { createFileRoute, notFound, useParams } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/$accountName/$companionName")({
+export const Route = createFileRoute("/$accountName/companions/$companionName")({
   component: Account,
   beforeLoad: ({ params: { accountName } }) => {
     if (accountName === "@" || !accountName.startsWith("@")) {
@@ -16,7 +16,7 @@ export const Route = createFileRoute("/$accountName/$companionName")({
 
 function Account() {
   const { accountName, companionName } = useParams({
-    from: "/$accountName/$companionName",
+    from: "/$accountName/companions/$companionName",
   });
   const sanitizedAccountName = accountName.replace(/^@/, "");
 

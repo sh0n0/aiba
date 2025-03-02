@@ -1,5 +1,4 @@
 class CompanionsController < ApplicationController
-  before_action :authenticate_user!
   before_action :set_companion, only: %i[ update destroy ]
 
   def index

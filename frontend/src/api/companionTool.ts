@@ -1,7 +1,7 @@
-import type { CompanionToolResponse } from "@/api/types/companionTool";
 import { API_BASE } from "@/constants/api";
 import { toSnakeCase } from "@/lib/utils";
 import { useAppStore } from "@/store/store";
+import type { CompanionToolDetailResponse, CompanionToolResponse } from "@/api/types";
 
 type ParamType = "string" | "number" | "array" | "boolean";
 
@@ -48,6 +48,25 @@ export async function fetchOwnedCompanionToolsFetcher(_: string): Promise<Compan
   });
   if (!res.ok) {
     throw new Error("Fetch owned companions failed");
+  }
+  return res.json();
+}
+
+export async function fetchCompanionToolDetailFetcher(
+  _: string,
+  { arg }: { arg: { accountName: string; toolName: string } },
+): Promise<CompanionToolDetailResponse> {
+  const { uid, client, accessToken } = useAppStore.getState().getAuth();
+
+  const res = await fetch(`${API_BASE}/tools/${arg.accountName}/${arg.toolName}`, {
+    headers: {
+      uid,
+      client,
+      "access-token": accessToken,
+    },
+  });
+  if (!res.ok) {
+    throw new Error("Fetch companion failed");
   }
   return res.json();
 }

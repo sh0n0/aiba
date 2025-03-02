@@ -163,7 +163,7 @@ const CompanionCommentComponent = ({ companionComment }: { companionComment: Com
     <div>
       <Separator className="mt-8 mb-4" />
       <Link
-        to="/$accountName/$companionName"
+        to="/$accountName/companions/$companionName"
         params={{
           accountName: `@${companionComment.companion.creator.name}`,
           companionName: companionComment.companion.name,

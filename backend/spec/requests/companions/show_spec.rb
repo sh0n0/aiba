@@ -1,3 +1,5 @@
+require 'rails_helper'
+
 RSpec.describe CompanionsController, type: :request do
   describe 'GET /companions/:account_name/:companion_name' do
     let!(:account) { create(:account) }

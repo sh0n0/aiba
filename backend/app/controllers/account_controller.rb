@@ -1,5 +1,5 @@
 class AccountController < ApplicationController
-  before_action :set_account, only: %i[show tweets companions]
+  before_action :set_account, only: %i[show tweets companions companion_tools]
 
   rescue_from Pagy::OverflowError, with: :not_found
 
@@ -28,6 +28,12 @@ class AccountController < ApplicationController
     companions = @account.created_companions.recent.published
     pagy, companions = pagy(companions, limit: COMPANIONS_PER_PAGE)
     render json: { companions: companions, page: pagy_metadata(pagy) }, each_serializer: CompanionSerializer
+  end
+
+  def companion_tools
+    companion_tools = @account.created_companion_tools.recent.published
+    pagy, companion_tools = pagy(companion_tools, limit: COMPANION_TOOLS_PER_PAGE)
+    render json: { tools: companion_tools, page: pagy_metadata(pagy) }, each_serializer: CompanionToolSerializer
   end
 
   private

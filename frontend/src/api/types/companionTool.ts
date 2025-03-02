@@ -8,3 +8,21 @@ export type CompanionToolResponse = {
     createdAt: string;
   };
 };
+
+export type CompanionToolPageResponse = {
+  tools: CompanionToolResponse[];
+  page: {
+    next: number | null;
+  };
+};
+
+export type CompanionToolDetailResponse = {
+  name: string;
+  description: string;
+  url: string;
+  publishedAt: string;
+  creator: {
+    name: string;
+    displayName: string;
+  };
+};

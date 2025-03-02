@@ -1,4 +1,4 @@
-import type { AccountResponse, CompanionPageResponse, TweetResponse } from "@/api/types";
+import type { AccountResponse, CompanionPageResponse, CompanionToolPageResponse, TweetResponse } from "@/api/types";
 import { API_BASE } from "@/constants/api.ts";
 import { convertToFormData } from "@/lib/utils";
 import { useAppStore } from "@/store/store.ts";
@@ -61,6 +61,17 @@ export async function accountCompanionsFetcher(
   const res = await fetch(`${API_BASE}/account/${arg.name}/companions?page=${arg.page}`);
   if (!res.ok) {
     throw new Error("Fetch account companions failed");
+  }
+  return res.json();
+}
+
+export async function accountToolsFetcher(
+  _: string,
+  { arg }: { arg: { name: string; page: number } },
+): Promise<CompanionToolPageResponse> {
+  const res = await fetch(`${API_BASE}/account/${arg.name}/tools?page=${arg.page}`);
+  if (!res.ok) {
+    throw new Error("Fetch account tools failed");
   }
   return res.json();
 }

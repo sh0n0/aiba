@@ -17,9 +17,9 @@ Rails.application.routes.draw do
   resources :companion_tools, only: [ :index, :create ], path: "tools" do
     get :owned, on: :collection
   end
-  get "tools/:account_name/:companion_tool_name", to: "companion_tools#show"
-  put "tools/:account_name/:companion_tool_name", to: "companion_tools#update"
-  delete "tools/:account_name/:companion_tool_name", to: "companion_tools#destroy"
+  get "tools/:account_name/:tool_name", to: "companion_tools#show"
+  put "tools/:account_name/:tool_name", to: "companion_tools#update"
+  delete "tools/:account_name/:tool_name", to: "companion_tools#destroy"
 
   resources :tweets
 
@@ -27,6 +27,7 @@ Rails.application.routes.draw do
   post "account/avatar", to: "account#avatar"
   get "account/:name/tweets", to: "account#tweets"
   get "account/:name/companions", to: "account#companions"
+  get "account/:name/tools", to: "account#companion_tools"
 
   resources :account, param: :name, only: [ :show ]
 

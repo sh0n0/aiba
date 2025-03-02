@@ -43,6 +43,10 @@ class Account < ApplicationRecord
     created_companions.published.count
   end
 
+  def companion_tools_count
+    created_companion_tools.published.count
+  end
+
   private
 
   def generate_keys

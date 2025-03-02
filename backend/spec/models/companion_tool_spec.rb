@@ -1,6 +1,43 @@
 require 'rails_helper'
 
 RSpec.describe CompanionTool, type: :model do
+  describe '.published' do
+    let!(:published_companion_tool) { create(:companion_tool, published_at: Time.current) }
+    let!(:unpublished_companion_tool) { create(:companion_tool, published_at: nil) }
+
+    it 'returns only companion tools with a non-nil published_at' do
+      expect(CompanionTool.published).to contain_exactly(published_companion_tool)
+    end
+  end
+
+  describe '.with_name' do
+    let!(:companion_tool1) { create(:companion_tool, name: "tool1") }
+    let!(:companion_tool2) { create(:companion_tool, name: "tool2") }
+
+    it 'returns the companion tool with the given name' do
+      expect(CompanionTool.with_name("tool1")).to contain_exactly(companion_tool1)
+    end
+  end
+
+  describe '.created_by' do
+    let!(:account) { create(:account) }
+    let!(:companion_tool1) { create(:companion_tool, creator: account) }
+    let!(:companion_tool2) { create(:companion_tool, creator: build(:account)) }
+
+    it "returns the companion tool created by the given account" do
+      expect(CompanionTool.created_by(account)).to contain_exactly(companion_tool1)
+    end
+  end
+
+  describe '.recent' do
+    let!(:companion_tool1) { create(:companion_tool) }
+    let!(:companion_tool2) { create(:companion_tool) }
+
+    it 'returns companion tools in descending order of id' do
+      expect(CompanionTool.recent).to eq([ companion_tool2, companion_tool1 ])
+    end
+  end
+
   describe '.find_by_account_and_tool_pairs!' do
     let!(:account) { create(:account) }
     let!(:companion_tool1) { create(:companion_tool, creator: account) }

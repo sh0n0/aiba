@@ -12,6 +12,11 @@ class CompanionTool < ApplicationRecord
   validates :name, presence: true
   validates :description, presence: true
 
+  scope :published, -> { where.not(published_at: nil) }
+  scope :with_name, ->(name) { where(name: name) }
+  scope :created_by, ->(account) { where(creator: account) }
+  scope :recent, -> { order(id: :desc) }
+
   # @param [Array<Hash>] pairs
   # @return [Array<CompanionTool>]
   def self.find_by_account_and_tool_pairs!(pairs)

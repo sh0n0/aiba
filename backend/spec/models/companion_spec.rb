@@ -29,6 +29,15 @@ RSpec.describe Companion do
     end
   end
 
+  describe '.recent' do
+    let!(:companion_1) { create(:companion) }
+    let!(:companion_2) { create(:companion) }
+
+    it 'returns companions in descending order of id' do
+      expect(Companion.recent).to eq([ companion_2, companion_1 ])
+    end
+  end
+
   describe '#starred_count' do
     let!(:companion) { create(:companion) }
 

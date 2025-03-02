@@ -21,6 +21,7 @@ import { useForm } from "react-hook-form";
 import useSWR from "swr";
 import useSWRInfinite from "swr/infinite";
 import useSWRMutation from "swr/mutation";
+import { C } from "vitest/dist/chunks/reporters.0x019-V2.js";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -81,8 +82,11 @@ function Index() {
     const { text, companion: companionName } = data;
     const selectedCompanion = ownedCompanions?.find((c) => c.name === companionName) || null;
     const param = selectedCompanion
-      ? { text, companion: { creatorName: selectedCompanion.creator.name, companionName: selectedCompanion.name } }
-      : { text, companion: null };
+      ? {
+          tweet: { text },
+          companion: { creatorName: selectedCompanion.creator.name, companionName: selectedCompanion.name },
+        }
+      : { tweet: { text }, companion: null };
 
     await trigger(param);
   };
