@@ -21,7 +21,6 @@ import { useForm } from "react-hook-form";
 import useSWR from "swr";
 import useSWRInfinite from "swr/infinite";
 import useSWRMutation from "swr/mutation";
-import { C } from "vitest/dist/chunks/reporters.0x019-V2.js";
 
 export const Route = createFileRoute("/")({
   component: Index,

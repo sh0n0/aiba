@@ -1,7 +1,7 @@
+import type { CompanionToolDetailResponse, CompanionToolResponse } from "@/api/types";
 import { API_BASE } from "@/constants/api";
 import { toSnakeCase } from "@/lib/utils";
 import { useAppStore } from "@/store/store";
-import type { CompanionToolDetailResponse, CompanionToolResponse } from "@/api/types";
 
 type ParamType = "string" | "number" | "array" | "boolean";
 
