@@ -26,5 +26,24 @@ RSpec.describe CompanionsController, type: :request do
         expect(account.created_companions.first.companion_tools.count).to eq(2)
       end
     end
+
+    context 'without auth headers' do
+      it 'returns a 401' do
+        params = {
+          companion: {
+            name: 'name',
+            description: 'description',
+            prompt: 'prompt',
+            tools: [
+              { creator_name: companion_tool1.creator.name, tool_name: companion_tool1.name },
+              { creator_name: companion_tool2.creator.name, tool_name: companion_tool2.name }
+            ]
+          }
+        }
+        post '/companions', params: params
+        expect(response).to have_http_status(401)
+        expect(Companion.count).to eq(0)
+      end
+    end
   end
 end

@@ -17,6 +17,17 @@ RSpec.describe CompanionsController, type: :request do
       end
     end
 
+    context 'without auth headers' do
+      let!(:companion) { create(:companion, creator: account, published_at: nil) }
+      let!(:companion_ownership) { create(:companion_ownership, account: account, companion: companion) }
+
+      it 'returns a 401' do
+        post "/companions/#{account.name}/#{companion.name}/publish"
+        expect(response).to have_http_status(401)
+        expect(companion.published_at).to be_nil
+      end
+    end
+
     context 'when the companion is not created by the account' do
       let!(:other_account) { create(:account) }
       let!(:other_user) { create(:user, account: other_account) }

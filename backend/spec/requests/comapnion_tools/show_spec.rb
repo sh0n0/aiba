@@ -58,6 +58,13 @@ RSpec.describe CompanionToolsController, type: :request do
           expect(response).to have_http_status(404)
         end
       end
+
+      context 'when the requesting user is not authenticated' do
+        it 'returns a 404' do
+          get "/tools/#{account.name}/#{companion_tool.name}"
+          expect(response).to have_http_status(404)
+        end
+      end
     end
   end
 end

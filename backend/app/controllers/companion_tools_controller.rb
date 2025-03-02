@@ -1,4 +1,5 @@
 class CompanionToolsController < ApplicationController
+  before_action :authenticate_user!, only: %i[ create update destroy ]
   before_action :set_companion_tool, only: %i[update destroy]
 
   def index

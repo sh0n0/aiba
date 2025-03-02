@@ -25,6 +25,26 @@ RSpec.describe CompanionToolsController, type: :request do
       end
     end
 
+    context 'without auth headers' do
+      it 'returns an error' do
+        params = {
+          companion_tool: {
+            name: "name",
+            description: "description",
+            url: "https://example.com",
+            params: [
+              { name: "param1", description: "description1", param_type: "string" },
+              { name: "param2", description: "description2", param_type: "number" }
+            ]
+          }
+        }
+        post '/tools', params: params
+        expect(response).to have_http_status(401)
+        expect(CompanionTool.count).to eq(0)
+        expect(CompanionToolParam.count).to eq(0)
+      end
+    end
+
     context 'with invalid params' do
       it 'returns an error' do
         params = {

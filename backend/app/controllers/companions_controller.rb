@@ -1,4 +1,5 @@
 class CompanionsController < ApplicationController
+  before_action :authenticate_user!, only: %i[ create update destroy publish unpublish ]
   before_action :set_companion, only: %i[ update destroy ]
 
   def index
@@ -11,7 +12,7 @@ class CompanionsController < ApplicationController
   end
 
   def show
-    current_user_account = current_user.account
+    current_user_account = current_user&.account
     account = Account.find_by!(name: params[:account_name])
 
     companion = Companion
