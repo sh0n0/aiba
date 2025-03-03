@@ -1,4 +1,4 @@
-import type { CompanionResponse } from "@/api/types/companion.ts";
+import type { CompanionDetailResponse, CompanionResponse } from "@/api/types";
 import { API_BASE } from "@/constants/api.ts";
 import { toSnakeCase } from "@/lib/utils";
 import { useAppStore } from "@/store/store.ts";
@@ -61,19 +61,6 @@ export async function fetchOwnedCompanionsFetcher(_: string): Promise<CompanionR
   }
   return res.json();
 }
-
-type CompanionDetailResponse = {
-  name: string;
-  description: string;
-  prompt: string;
-  publishedAt: string;
-  creator: {
-    name: string;
-    displayName: string;
-  };
-  starred: boolean;
-  starredCount: number;
-};
 
 export async function fetchCompanionDetailFetcher(
   _: string,

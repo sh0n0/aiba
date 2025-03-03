@@ -19,6 +19,8 @@ Rails.application.routes.draw do
   end
   get "tools/:account_name/:tool_name", to: "companion_tools#show"
   put "tools/:account_name/:tool_name", to: "companion_tools#update"
+  post "tools/:account_name/:tool_name/publish", to: "companion_tools#publish"
+  post "tools/:account_name/:tool_name/unpublish", to: "companion_tools#unpublish"
   delete "tools/:account_name/:tool_name", to: "companion_tools#destroy"
 
   resources :tweets

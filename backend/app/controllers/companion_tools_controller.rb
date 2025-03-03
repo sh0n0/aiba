@@ -1,5 +1,5 @@
 class CompanionToolsController < ApplicationController
-  before_action :authenticate_user!, only: %i[ create update destroy ]
+  before_action :authenticate_user!, only: %i[ create update destroy publish unpublish ]
   before_action :set_companion_tool, only: %i[update destroy]
 
   def index
@@ -53,11 +53,37 @@ class CompanionToolsController < ApplicationController
     end
   end
 
+  def publish
+    change_publication_state do |companion_tool|
+      return render status: :conflict if companion_tool.published_at.present?
+      companion_tool.publish!
+    end
+  end
+
+  def unpublish
+    change_publication_state do |companion_tool|
+      return render status: :conflict if companion_tool.published_at.nil?
+      companion_tool.unpublish!
+    end
+  end
+
   def destroy
     @companion_tool.destroy
   end
 
   private
+
+  def change_publication_state
+    account = Account.find_by!(name: params[:account_name])
+    return render status: :forbidden if account != current_user.account
+
+    companion_tool = CompanionTool.created_by(account).with_name(params[:tool_name]).first
+    return render status: :not_found if companion_tool.nil?
+
+    yield companion_tool
+
+    render json: companion_tool, serializer: CompanionToolDetailSerializer, account: current_user.account
+  end
 
   def set_companion_tool
     account = Account.find_by!(name: params[:account_name])

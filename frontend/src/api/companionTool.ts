@@ -47,7 +47,7 @@ export async function fetchOwnedCompanionToolsFetcher(_: string): Promise<Compan
     },
   });
   if (!res.ok) {
-    throw new Error("Fetch owned companions failed");
+    throw new Error("Fetch owned companion tools failed");
   }
   return res.json();
 }
@@ -66,7 +66,47 @@ export async function fetchCompanionToolDetailFetcher(
     },
   });
   if (!res.ok) {
-    throw new Error("Fetch companion failed");
+    throw new Error("Fetch companion tool failed");
+  }
+  return res.json();
+}
+
+export async function publishCompanionToolFetcher(
+  _: string,
+  { arg }: { arg: { accountName: string; toolName: string } },
+): Promise<CompanionToolDetailResponse> {
+  const { uid, client, accessToken } = useAppStore.getState().getAuth();
+
+  const res = await fetch(`${API_BASE}/tools/${arg.accountName}/${arg.toolName}/publish`, {
+    method: "POST",
+    headers: {
+      uid,
+      client,
+      "access-token": accessToken,
+    },
+  });
+  if (!res.ok) {
+    throw new Error("Publish companion tool failed");
+  }
+  return res.json();
+}
+
+export async function unpublishCompanionToolFetcher(
+  _: string,
+  { arg }: { arg: { accountName: string; toolName: string } },
+): Promise<CompanionToolDetailResponse> {
+  const { uid, client, accessToken } = useAppStore.getState().getAuth();
+
+  const res = await fetch(`${API_BASE}/tools/${arg.accountName}/${arg.toolName}/unpublish`, {
+    method: "POST",
+    headers: {
+      uid,
+      client,
+      "access-token": accessToken,
+    },
+  });
+  if (!res.ok) {
+    throw new Error("Unpublish companion tool failed");
   }
   return res.json();
 }

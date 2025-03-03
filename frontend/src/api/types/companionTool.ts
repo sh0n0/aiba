@@ -19,7 +19,7 @@ export type CompanionToolPageResponse = {
 export type CompanionToolDetailResponse = {
   name: string;
   description: string;
-  url: string;
+  url: string | null;
   publishedAt: string;
   creator: {
     name: string;

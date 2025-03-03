@@ -1,6 +1,7 @@
-import { fetchCompanionToolDetailFetcher } from "@/api/companionTool";
+import { Button } from "@/components/ui/button";
+import { useCompanionToolDetail } from "@/hooks/useCompanionToolDetail";
+import { useCompanionToolPublishActions } from "@/hooks/useCompanionToolPublishActions";
 import { createFileRoute, notFound, useParams } from "@tanstack/react-router";
-import useSWR from "swr";
 
 export const Route = createFileRoute("/$accountName/tools/$toolName")({
   component: RouteComponent,
@@ -16,21 +17,26 @@ function RouteComponent() {
     from: "/$accountName/tools/$toolName",
   });
   const sanitizedAccountName = accountName.replace(/^@/, "");
-  const { data } = useSWR(
-    [`/account/${sanitizedAccountName}`, { accountName: sanitizedAccountName, toolName }],
-    ([, arg]) => fetchCompanionToolDetailFetcher("", { arg }),
-  );
+  const { data, publishedAt, setPublishedAt } = useCompanionToolDetail(sanitizedAccountName, toolName);
+  const { publish, unpublish } = useCompanionToolPublishActions(sanitizedAccountName, toolName, setPublishedAt);
 
   if (!data) {
     return <div>Loading...</div>;
   }
+
+  const publishable = !publishedAt && data.url;
+  const unpublishable = publishedAt && data.url;
+
   return (
     <div>
+      {publishable && <Button onClick={publish}>Publish</Button>}
+      {unpublishable && <Button onClick={unpublish}>Unpublish</Button>}
       <p>
         {data.creator.name}/{data.name}
       </p>
       <p>{data.description}</p>
       <p>{data.url}</p>
+      <p>{publishedAt}</p>
     </div>
   );
 }

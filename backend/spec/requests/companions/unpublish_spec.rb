@@ -13,7 +13,6 @@ RSpec.describe CompanionsController, type: :request do
       it 'unpublishes the companion' do
         post "/companions/#{account.name}/#{companion.name}/unpublish", headers: auth_headers(user)
         expect(response).to have_http_status(200)
-
         expect { companion.reload }.to change { companion.published_at }.from(be_within(1.minute).of(current_time)).to(nil)
       end
     end
@@ -25,7 +24,7 @@ RSpec.describe CompanionsController, type: :request do
       it 'returns a 401' do
         post "/companions/#{account.name}/#{companion.name}/unpublish"
         expect(response).to have_http_status(401)
-        expect(companion.published_at).not_to be_nil
+        expect(companion.reload.published_at).not_to be_nil
       end
     end
 
@@ -38,6 +37,7 @@ RSpec.describe CompanionsController, type: :request do
       it 'returns a 404' do
         post "/companions/#{account.name}/#{other_companion.name}/unpublish", headers: auth_headers(user)
         expect(response).to have_http_status(404)
+        expect(other_companion.reload.published_at).not_to be_nil
       end
     end
 
@@ -65,6 +65,7 @@ RSpec.describe CompanionsController, type: :request do
       it 'returns a 404' do
         post "/companions/nonexistent/#{companion.name}/unpublish", headers: auth_headers(user)
         expect(response).to have_http_status(404)
+        expect(companion.reload.published_at).not_to be_nil
       end
     end
   end

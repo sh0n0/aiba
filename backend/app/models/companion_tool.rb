@@ -32,6 +32,14 @@ class CompanionTool < ApplicationRecord
     end
   end
 
+  def publish!
+    update!(published_at: Time.now.utc)
+  end
+
+  def unpublish!
+    update!(published_at: nil)
+  end
+
   def to_json_schema
     {
       type: "function",

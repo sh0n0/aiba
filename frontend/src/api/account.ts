@@ -85,7 +85,15 @@ export async function accountToolsFetcher(
   _: string,
   { arg }: { arg: { name: string; page: number } },
 ): Promise<CompanionToolPageResponse> {
-  const res = await fetch(`${API_BASE}/account/${arg.name}/tools?page=${arg.page}`);
+  const { uid, client, accessToken } = useAppStore.getState().getAuth();
+
+  const res = await fetch(`${API_BASE}/account/${arg.name}/tools?page=${arg.page}`, {
+    headers: {
+      uid,
+      client,
+      "access-token": accessToken,
+    },
+  });
   if (!res.ok) {
     throw new Error("Fetch account tools failed");
   }

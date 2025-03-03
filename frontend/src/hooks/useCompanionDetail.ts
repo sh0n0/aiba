@@ -1,19 +1,9 @@
 import { fetchCompanionDetailFetcher } from "@/api/companion.ts";
-import { useEffect, useState } from "react";
-import useSWR from "swr";
+import { usePublishedResource } from "./usePublishedResource";
 
 export function useCompanionDetail(sanitizedAccountName: string, companionName: string) {
-  const { data, error } = useSWR(
-    [`/account/${sanitizedAccountName}`, { accountName: sanitizedAccountName, companionName }],
-    ([, arg]) => fetchCompanionDetailFetcher("", { arg }),
-  );
-  const [publishedAt, setPublishedAt] = useState(data?.publishedAt);
+  const resourceKey = `/account/${sanitizedAccountName}`;
+  const params = { accountName: sanitizedAccountName, companionName };
 
-  useEffect(() => {
-    if (data) {
-      setPublishedAt(data.publishedAt);
-    }
-  }, [data]);
-
-  return { data, publishedAt, setPublishedAt, error };
+  return usePublishedResource(resourceKey, params, (arg) => fetchCompanionDetailFetcher("", { arg }));
 }
