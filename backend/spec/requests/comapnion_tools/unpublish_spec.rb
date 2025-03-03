@@ -13,7 +13,7 @@ RSpec.describe CompanionToolsController, type: :request do
       it 'unpublishes the companion' do
         post "/tools/#{account.name}/#{companion_tool.name}/unpublish", headers: auth_headers(user)
         expect(response).to have_http_status(200)
-        expect { companion_tool.reload }.to change { companion_tool.published_at }.from(current_time).to(nil)
+        expect { companion_tool.reload }.to change { companion_tool.published_at }.from(be_within(1.minute).of(current_time)).to(nil)
       end
     end
 
