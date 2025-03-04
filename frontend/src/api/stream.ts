@@ -1,6 +1,6 @@
+import type { StreamsResponse } from "@/api/types";
 import { API_BASE } from "@/constants/api";
 import { useAppStore } from "@/store/store";
-import type { StreamsResponse } from "@/api/types";
 
 export async function myStreamsFetcher(_: string): Promise<StreamsResponse> {
   const { uid, client, accessToken } = useAppStore.getState().getAuth();
