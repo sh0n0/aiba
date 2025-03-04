@@ -1,5 +1,6 @@
 import { myAccountFetcher } from "@/api/account";
 import { fetchOwnedCompanionsFetcher } from "@/api/companion";
+import { myStreamsFetcher } from "@/api/stream";
 import { postTweetFetcher, tweetsFetcher } from "@/api/tweet.ts";
 import type { TweetResponse } from "@/api/types";
 import { InfiniteScrollObserver } from "@/components/InfiniteScrollObserver";
@@ -38,6 +39,7 @@ function Index() {
   const { trigger, isMutating, error } = useSWRMutation("tweets", postTweetFetcher);
   const { data: ownedCompanions } = useSWR("owned_companions", fetchOwnedCompanionsFetcher);
   const { data: myAccount } = useSWR("settings/profile", myAccountFetcher);
+  const { data: streams } = useSWR("streams", myStreamsFetcher);
 
   const { data: tweets, setSize } = useSWRInfinite((pageIndex: number, previousPageData: TweetResponse[]) => {
     if (previousPageData && previousPageData.length < ACCOUNT_TWEET_PAGE_SIZE) return null;
@@ -56,11 +58,12 @@ function Index() {
   }, [tweets, appendTweet]);
 
   useEffect(() => {
+    if (!streams) return;
+
     const cable = createCable("ws://localhost:8080/cable", {
       logLevel: "debug",
     });
-    const signedName = "InRpbWVsaW5lL3B1YmxpYyI=--e0700d7670d753a8d1c0a1948ccc102d7ac94fc26c9e0b84b434d64222e3ca6a";
-    const publicChannel = cable.streamFromSigned(signedName);
+    const publicChannel = cable.streamFromSigned(streams.publicStream);
     const timelineMessageDispatcher = new TimelineMessageDispatcher(
       myAccount?.name,
       addTweet,
@@ -75,7 +78,7 @@ function Index() {
     return () => {
       publicChannel.disconnect();
     };
-  }, [addTweet, attachReaction, detachReaction, myAccount]);
+  }, [addTweet, attachReaction, detachReaction, myAccount, streams]);
 
   const onSubmitTweet = async (data: { text: string; companion: string }) => {
     const { text, companion: companionName } = data;

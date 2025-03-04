@@ -1,3 +1,4 @@
+export * from "./stream";
 export * from "./account";
 export * from "./companion";
 export * from "./tweet";

@@ -35,6 +35,8 @@ Rails.application.routes.draw do
 
   resources :account, param: :name, only: [ :show ]
 
+  get "streams/my", to: "streams#my"
+
   mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.development?
   mount Sidekiq::Web => "/sidekiq" # FIXME: add authentication
 
