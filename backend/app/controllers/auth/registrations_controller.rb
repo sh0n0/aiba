@@ -1,9 +1,7 @@
 class Auth::RegistrationsController < DeviseTokenAuth::RegistrationsController
-  def create
-    super do |resource|
-      signed_name = AnyCable::Streams.signed("timeline/public")
-      render json: resource.as_json.merge(feed_stream_name: signed_name) and return
-    end
+  def render_create_success
+    signed_name = AnyCable::Streams.signed("timeline/public")
+    render json: @resource.as_json.merge(feed_stream_name: signed_name)
   end
 
   private
