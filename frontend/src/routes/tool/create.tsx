@@ -5,8 +5,8 @@ import { Form, FormField, FormItem, FormLabel } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { redirectToLoginIfUnauthorized } from "@/lib/utils";
-import { createFileRoute } from "@tanstack/react-router";
-import { Trash2 } from "lucide-react";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { LoaderCircle, Trash2 } from "lucide-react";
 import { type Control, useFieldArray, useForm } from "react-hook-form";
 import useSWRMutation from "swr/mutation";
 
@@ -29,6 +29,8 @@ export const Route = createFileRoute("/tool/create")({
 });
 
 function RouteComponent() {
+  const navigate = useNavigate({ from: "/tool/create" });
+
   const form = useForm<CompanionToolFormValues>({
     defaultValues: {
       name: "",
@@ -52,6 +54,7 @@ function RouteComponent() {
   const onSubmitCompanion = async (data: { name: string; description: string; url: string; params: ToolParams[] }) => {
     const { name, description, url, params } = data;
     await trigger({ name, description, url, params });
+    await navigate({ to: "/tool" });
   };
 
   return (
@@ -90,7 +93,7 @@ function RouteComponent() {
           </div>
 
           <Button type="submit" disabled={isMutating}>
-            {isMutating ? "Creating..." : "Create"}
+            {isMutating ? <LoaderCircle className="animate-spin" /> : "Create"}
           </Button>
           {error && <div className="mt-2 text-red-500">Error: {error.message}</div>}
         </form>

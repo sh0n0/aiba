@@ -7,8 +7,8 @@ import { Input } from "@/components/ui/input.tsx";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select.tsx";
 import { Textarea } from "@/components/ui/textarea.tsx";
 import { redirectToLoginIfUnauthorized } from "@/lib/utils.ts";
-import { createFileRoute } from "@tanstack/react-router";
-import { Trash2 } from "lucide-react";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { LoaderCircle, Trash2 } from "lucide-react";
 import { useFieldArray, useForm } from "react-hook-form";
 import useSWR from "swr";
 import useSWRMutation from "swr/mutation";
@@ -40,6 +40,8 @@ type CompanionFormValues = {
 };
 
 const CreateCompanionForm = () => {
+  const navigate = useNavigate({ from: "/companion/create" });
+
   const form = useForm<CompanionFormValues>({
     defaultValues: {
       name: "",
@@ -79,6 +81,7 @@ const CreateCompanionForm = () => {
         };
       });
     await trigger({ name, description, prompt, tools: selectedTools });
+    await navigate({ to: "/companion" });
   };
 
   return (
@@ -151,7 +154,7 @@ const CreateCompanionForm = () => {
         </div>
 
         <Button type="submit" disabled={isMutating}>
-          {isMutating ? "Creating..." : "Create"}
+          {isMutating ? <LoaderCircle className="animate-spin" /> : "Create"}
         </Button>
         {error && <div className="mt-2 text-red-500">Error: {error.message}</div>}
       </form>
