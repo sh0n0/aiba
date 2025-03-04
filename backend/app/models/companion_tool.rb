@@ -1,4 +1,5 @@
 class CompanionTool < ApplicationRecord
+  include Publishable
   include Starrable
 
   belongs_to :creator, class_name: "Account", foreign_key: :created_by
@@ -14,7 +15,6 @@ class CompanionTool < ApplicationRecord
   validates :name, presence: true
   validates :description, presence: true
 
-  scope :published, -> { where.not(published_at: nil) }
   scope :with_name, ->(name) { where(name: name) }
   scope :created_by, ->(account) { where(creator: account) }
   scope :recent, -> { order(id: :desc) }
@@ -32,14 +32,6 @@ class CompanionTool < ApplicationRecord
 
       companion_tool
     end
-  end
-
-  def publish!
-    update!(published_at: Time.now.utc)
-  end
-
-  def unpublish!
-    update!(published_at: nil)
   end
 
   def to_json_schema

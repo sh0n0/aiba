@@ -2,16 +2,9 @@ require 'rails_helper'
 
 RSpec.describe CompanionTool, type: :model do
   subject { create(:companion_tool) }
+  let(:factory) { :companion_tool }
+  it_behaves_like "publishable"
   it_behaves_like "starrable"
-
-  describe '.published' do
-    let!(:published_companion_tool) { create(:companion_tool, published_at: Time.current) }
-    let!(:unpublished_companion_tool) { create(:companion_tool, published_at: nil) }
-
-    it 'returns only companion tools with a non-nil published_at' do
-      expect(CompanionTool.published).to contain_exactly(published_companion_tool)
-    end
-  end
 
   describe '.with_name' do
     let!(:companion_tool1) { create(:companion_tool, name: "tool1") }

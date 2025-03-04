@@ -2,16 +2,9 @@ require "rails_helper"
 
 RSpec.describe Companion do
   subject { create(:companion) }
+  let(:factory) { :companion }
+  it_behaves_like "publishable"
   it_behaves_like "starrable"
-
-  describe '.published' do
-    let!(:published_companion) { create(:companion, published_at: Time.current) }
-    let!(:unpublished_companion) { create(:companion, published_at: nil) }
-
-    it 'returns only companions with a non-nil published_at' do
-      expect(Companion.published).to contain_exactly(published_companion)
-    end
-  end
 
   describe '.with_name' do
     let!(:companion_1) { create(:companion, name: "Test Companion") }

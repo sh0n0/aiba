@@ -1,4 +1,5 @@
 class Companion < ApplicationRecord
+  include Publishable
   include Starrable
 
   belongs_to :creator, class_name: "Account", foreign_key: :created_by
@@ -14,7 +15,6 @@ class Companion < ApplicationRecord
   validates :description, presence: true
   validates :prompt, presence: true
 
-  scope :published, -> { where.not(published_at: nil) }
   scope :with_name, ->(name) { where(name: name) }
   scope :created_by, ->(account) { where(creator: account) }
   scope :recent, -> { order(id: :desc) }
@@ -28,13 +28,5 @@ class Companion < ApplicationRecord
   def make_comment(tweet)
     text = Ai::OpenaiApi.instance.generate_sentences(prompt, tweet.text, companion_tools)
     CompanionComment.create(text: text, companion: self, tweet: tweet)
-  end
-
-  def publish!
-    update!(published_at: Time.now.utc)
-  end
-
-  def unpublish!
-    update!(published_at: nil)
   end
 end
