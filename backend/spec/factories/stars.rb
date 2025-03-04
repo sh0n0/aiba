@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :star do
-    association :starrable
+    association :starrable, factory: :companion
     association :account
   end
 end
