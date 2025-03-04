@@ -1,4 +1,6 @@
 class CompanionTool < ApplicationRecord
+  include Starrable
+
   belongs_to :creator, class_name: "Account", foreign_key: :created_by
 
   has_many :companion_companion_tools

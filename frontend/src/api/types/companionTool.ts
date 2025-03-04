@@ -25,4 +25,6 @@ export type CompanionToolDetailResponse = {
     name: string;
     displayName: string;
   };
+  starred: boolean;
+  starredCount: number;
 };

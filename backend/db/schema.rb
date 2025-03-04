@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_03_01_101109) do
+ActiveRecord::Schema[8.0].define(version: 2025_03_03_163334) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -87,16 +87,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_01_101109) do
     t.index ["companion_id"], name: "index_companion_ownerships_on_companion_id"
   end
 
-  create_table "companion_stars", force: :cascade do |t|
-    t.bigint "companion_id", null: false
-    t.bigint "account_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["account_id"], name: "index_companion_stars_on_account_id"
-    t.index ["companion_id", "account_id"], name: "index_companion_stars_on_companion_id_and_account_id", unique: true
-    t.index ["companion_id"], name: "index_companion_stars_on_companion_id"
-  end
-
   create_table "companion_tool_ownerships", force: :cascade do |t|
     t.bigint "account_id", null: false
     t.bigint "companion_tool_id", null: false
@@ -149,6 +139,16 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_01_101109) do
     t.index ["reactable_type", "reactable_id"], name: "index_reactions_on_reactable"
   end
 
+  create_table "stars", force: :cascade do |t|
+    t.string "starrable_type", null: false
+    t.bigint "starrable_id", null: false
+    t.bigint "account_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_stars_on_account_id"
+    t.index ["starrable_type", "starrable_id"], name: "index_stars_on_starrable"
+  end
+
   create_table "tweets", force: :cascade do |t|
     t.text "text", null: false
     t.bigint "account_id", null: false
@@ -189,14 +189,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_01_101109) do
   add_foreign_key "companion_companion_tools", "companions"
   add_foreign_key "companion_ownerships", "accounts"
   add_foreign_key "companion_ownerships", "companions"
-  add_foreign_key "companion_stars", "accounts"
-  add_foreign_key "companion_stars", "companions"
   add_foreign_key "companion_tool_ownerships", "accounts"
   add_foreign_key "companion_tool_ownerships", "companion_tools"
   add_foreign_key "companion_tool_params", "companion_tools"
   add_foreign_key "companion_tools", "accounts", column: "created_by"
   add_foreign_key "companions", "accounts", column: "created_by"
   add_foreign_key "reactions", "accounts"
+  add_foreign_key "stars", "accounts"
   add_foreign_key "tweets", "accounts"
   add_foreign_key "users", "accounts"
 end

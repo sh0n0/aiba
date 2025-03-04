@@ -10,8 +10,9 @@ class Account < ApplicationRecord
   has_many :companion_tool_ownerships
   has_many :owned_companion_tools, through: :companion_tool_ownerships, source: :companion_tool
 
-  has_many :companion_stars
-  has_many :starred_companions, through: :companion_stars, source: :companion
+  has_many :stars
+  has_many :starred_companions, through: :stars, source: :starrable, source_type: "Companion"
+  has_many :starred_companion_tools, through: :stars, source: :starrable, source_type: "CompanionTool"
 
   has_one_attached :avatar
 

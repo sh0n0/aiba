@@ -1,6 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe CompanionTool, type: :model do
+  subject { create(:companion_tool) }
+  it_behaves_like "starrable"
+
   describe '.published' do
     let!(:published_companion_tool) { create(:companion_tool, published_at: Time.current) }
     let!(:unpublished_companion_tool) { create(:companion_tool, published_at: nil) }

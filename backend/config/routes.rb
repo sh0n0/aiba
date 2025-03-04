@@ -4,8 +4,10 @@ Rails.application.routes.draw do
   post "tweets/:tweet_id/reactions", to: "reactions#create"
   delete "tweets/:tweet_id/reactions", to: "reactions#destroy"
 
-  post "companions/:account_name/:companion_name/star", to: "companion_stars#create"
-  delete "companions/:account_name/:companion_name/star", to: "companion_stars#destroy"
+  post "companions/:account_name/:companion_name/star", to: "stars#create"
+  delete "companions/:account_name/:companion_name/star", to: "stars#destroy"
+  post "tools/:account_name/:tool_name/star", to: "stars#create"
+  delete "tools/:account_name/:tool_name/star", to: "stars#destroy"
 
   resources :companions, only: [ :index, :create, :update, :destroy ] do
     get :owned, on: :collection

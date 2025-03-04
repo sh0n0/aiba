@@ -1,6 +1,9 @@
 require "rails_helper"
 
 RSpec.describe Companion do
+  subject { create(:companion) }
+  it_behaves_like "starrable"
+
   describe '.published' do
     let!(:published_companion) { create(:companion, published_at: Time.current) }
     let!(:unpublished_companion) { create(:companion, published_at: nil) }
@@ -35,46 +38,6 @@ RSpec.describe Companion do
 
     it 'returns companions in descending order of id' do
       expect(Companion.recent).to eq([ companion_2, companion_1 ])
-    end
-  end
-
-  describe '#starred_count' do
-    let!(:companion) { create(:companion) }
-
-    context 'when the companion has no companion_stars' do
-      it 'returns 0' do
-        expect(companion.starred_count).to eq(0)
-      end
-    end
-
-    context 'when the companion has companion_stars' do
-      let!(:star_1) { create(:companion_star, companion: companion) }
-      let!(:star_2) { create(:companion_star, companion: companion) }
-
-      it 'returns the number of companion_stars' do
-        expect(companion.starred_count).to eq(2)
-      end
-    end
-  end
-
-  describe '#starred_by?' do
-    let!(:account) { create(:account) }
-    let!(:companion) { create(:companion) }
-
-    context 'when the companion is starred by the account' do
-      let!(:star) { create(:companion_star, account: account, companion: companion) }
-
-      it 'returns true' do
-        expect(companion.starred_by?(account)).to be true
-      end
-    end
-
-    context 'when the companion is not starred by the account' do
-      let!(:star) { create(:companion_star, account: build(:account), companion: companion) }
-
-      it 'returns false' do
-        expect(companion.starred_by?(account)).to be false
-      end
     end
   end
 
