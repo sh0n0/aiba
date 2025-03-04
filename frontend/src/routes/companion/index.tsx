@@ -75,7 +75,7 @@ const CompanionList = ({ companions }: { companions: Companion[] }) => {
             key={companion.id}
             onClick={async () =>
               await navigate({
-                to: `/@${companion.creator.name}/${companion.name}`,
+                to: `/@${companion.creator.name}/companions/${companion.name}`,
               })
             }
           >
