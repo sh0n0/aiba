@@ -1,4 +1,4 @@
-import twemoji from "@discordapp/twemoji";
+import { extractEmojiSrc } from "@/lib/utils";
 
 type EmojiReaction = {
   emoji: string;
@@ -33,8 +33,3 @@ export const EmojiReactions = ({ reactions, onToggleReaction }: EmojiReactionsPr
     </div>
   );
 };
-
-function extractEmojiSrc(emoji: string) {
-  const emojiUrl = twemoji.parse(emoji).match(/src="([^"]+)"/)?.[1];
-  return emojiUrl;
-}

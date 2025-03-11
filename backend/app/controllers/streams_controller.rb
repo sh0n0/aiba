@@ -3,6 +3,13 @@ class StreamsController < ApplicationController
 
   def my
     public_stream = AnyCable::Streams.signed("timeline/public")
-    render json: { publicStream: public_stream }
+    notification_stream = AnyCable::Streams.signed("notifications:#{current_user.account.id}")
+
+    render json: {
+      timeline: {
+        public: public_stream
+      },
+      notifications: notification_stream
+    }
   end
 end

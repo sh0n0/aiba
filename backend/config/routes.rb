@@ -1,6 +1,7 @@
 require "sidekiq/web"
 
 Rails.application.routes.draw do
+  resources :notifications, only: [ :index ]
   post "tweets/:tweet_id/reactions", to: "reactions#create"
   delete "tweets/:tweet_id/reactions", to: "reactions#destroy"
 

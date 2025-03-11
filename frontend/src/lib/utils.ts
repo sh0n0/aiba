@@ -1,4 +1,5 @@
 import { useAppStore } from "@/store/store.ts";
+import twemoji from "@discordapp/twemoji";
 import { redirect } from "@tanstack/react-router";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
@@ -28,6 +29,11 @@ export function convertToFormData(base64Image: string, propertyName: string, fil
   formData.append(propertyName, blob, fileName);
 
   return formData;
+}
+
+export function extractEmojiSrc(emoji: string) {
+  const emojiUrl = twemoji.parse(emoji).match(/src="([^"]+)"/)?.[1];
+  return emojiUrl;
 }
 
 type SnakeCase<S extends string> = S extends `${infer T}${infer U}`

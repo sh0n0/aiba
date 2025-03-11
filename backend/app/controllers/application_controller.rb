@@ -4,6 +4,7 @@ class ApplicationController < ActionController::API
   TWEETS_PER_PAGE = 10
   COMPANIONS_PER_PAGE = 10
   COMPANION_TOOLS_PER_PAGE = 10
+  NOTIFICATIONS_PER_PAGE = 20
 
   include DeviseTokenAuth::Concerns::SetUserByToken
   include Pagy::Backend

@@ -9,6 +9,7 @@ class ReactionsController < ApplicationController
       render json: {}, status: :conflict
     elsif reaction.save
       BroadcastReactionJob.perform_async(reaction.id, "attach")
+      NotificationService.new.call(reaction, @tweet.account, current_user.account)
       render json: {}, status: :created
     else
       render json: {}, status: :unprocessable_entity

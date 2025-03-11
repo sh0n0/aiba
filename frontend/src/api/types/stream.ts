@@ -1,3 +1,6 @@
 export type StreamsResponse = {
-  publicStream: string;
+  timeline: {
+    public: string;
+  };
+  notifications: string;
 };

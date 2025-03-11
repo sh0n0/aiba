@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button.tsx";
 import { FormField } from "@/components/ui/form.tsx";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea.tsx";
-import { ACCOUNT_TWEET_PAGE_SIZE, API_BASE } from "@/constants/api";
+import { ACCOUNT_TWEET_PAGE_SIZE, API_BASE, WEBSOCKET_URL } from "@/constants/api";
 import { useInfiniteLoading } from "@/hooks/useInfiniteLoading";
 import { TimelineMessageDispatcher } from "@/lib/TimelineMessageDispatcher";
 import { redirectToLoginIfUnauthorized } from "@/lib/utils.ts";
@@ -60,10 +60,10 @@ function Index() {
   useEffect(() => {
     if (!streams) return;
 
-    const cable = createCable("ws://localhost:8080/cable", {
+    const cable = createCable(WEBSOCKET_URL, {
       logLevel: "debug",
     });
-    const publicChannel = cable.streamFromSigned(streams.publicStream);
+    const publicChannel = cable.streamFromSigned(streams.timeline.public);
     const timelineMessageDispatcher = new TimelineMessageDispatcher(
       myAccount?.name,
       addTweet,

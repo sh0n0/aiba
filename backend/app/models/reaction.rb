@@ -1,6 +1,7 @@
 class Reaction < ApplicationRecord
   belongs_to :account
   belongs_to :reactable, polymorphic: true
+  has_one :notification, as: :notifiable, dependent: :destroy
 
   validates :emoji, presence: true
   validates :account_id, uniqueness: { scope: [ :reactable_type, :reactable_id, :emoji ] }

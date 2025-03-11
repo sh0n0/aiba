@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_03_03_163334) do
+ActiveRecord::Schema[8.0].define(version: 2025_03_06_062605) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -127,6 +127,19 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_03_163334) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "notifications", force: :cascade do |t|
+    t.string "notifiable_type", null: false
+    t.bigint "notifiable_id", null: false
+    t.bigint "to_account_id", null: false
+    t.bigint "from_account_id", null: false
+    t.datetime "read_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["from_account_id"], name: "index_notifications_on_from_account_id"
+    t.index ["notifiable_type", "notifiable_id"], name: "index_notifications_on_notifiable"
+    t.index ["to_account_id"], name: "index_notifications_on_to_account_id"
+  end
+
   create_table "reactions", force: :cascade do |t|
     t.bigint "account_id", null: false
     t.string "reactable_type", null: false
@@ -194,6 +207,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_03_163334) do
   add_foreign_key "companion_tool_params", "companion_tools"
   add_foreign_key "companion_tools", "accounts", column: "created_by"
   add_foreign_key "companions", "accounts", column: "created_by"
+  add_foreign_key "notifications", "accounts", column: "from_account_id"
+  add_foreign_key "notifications", "accounts", column: "to_account_id"
   add_foreign_key "reactions", "accounts"
   add_foreign_key "stars", "accounts"
   add_foreign_key "tweets", "accounts"

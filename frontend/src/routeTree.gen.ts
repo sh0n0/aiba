@@ -11,6 +11,7 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as NotificationImport } from './routes/notification'
 import { Route as LoginImport } from './routes/login'
 import { Route as IndexImport } from './routes/index'
 import { Route as ToolIndexImport } from './routes/tool/index'
@@ -25,6 +26,12 @@ import { Route as AccountNameToolsToolNameImport } from './routes/$accountName/t
 import { Route as AccountNameCompanionsCompanionNameImport } from './routes/$accountName/companions/$companionName'
 
 // Create/Update Routes
+
+const NotificationRoute = NotificationImport.update({
+  id: '/notification',
+  path: '/notification',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const LoginRoute = LoginImport.update({
   id: '/login',
@@ -119,6 +126,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginImport
       parentRoute: typeof rootRoute
     }
+    '/notification': {
+      id: '/notification'
+      path: '/notification'
+      fullPath: '/notification'
+      preLoaderRoute: typeof NotificationImport
+      parentRoute: typeof rootRoute
+    }
     '/companion/create': {
       id: '/companion/create'
       path: '/companion/create'
@@ -197,6 +211,7 @@ declare module '@tanstack/react-router' {
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+  '/notification': typeof NotificationRoute
   '/companion/create': typeof CompanionCreateRoute
   '/settings/profile': typeof SettingsProfileRoute
   '/tool/create': typeof ToolCreateRoute
@@ -212,6 +227,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+  '/notification': typeof NotificationRoute
   '/companion/create': typeof CompanionCreateRoute
   '/settings/profile': typeof SettingsProfileRoute
   '/tool/create': typeof ToolCreateRoute
@@ -228,6 +244,7 @@ export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+  '/notification': typeof NotificationRoute
   '/companion/create': typeof CompanionCreateRoute
   '/settings/profile': typeof SettingsProfileRoute
   '/tool/create': typeof ToolCreateRoute
@@ -245,6 +262,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/login'
+    | '/notification'
     | '/companion/create'
     | '/settings/profile'
     | '/tool/create'
@@ -259,6 +277,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/login'
+    | '/notification'
     | '/companion/create'
     | '/settings/profile'
     | '/tool/create'
@@ -273,6 +292,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/login'
+    | '/notification'
     | '/companion/create'
     | '/settings/profile'
     | '/tool/create'
@@ -289,6 +309,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   LoginRoute: typeof LoginRoute
+  NotificationRoute: typeof NotificationRoute
   CompanionCreateRoute: typeof CompanionCreateRoute
   SettingsProfileRoute: typeof SettingsProfileRoute
   ToolCreateRoute: typeof ToolCreateRoute
@@ -304,6 +325,7 @@ export interface RootRouteChildren {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   LoginRoute: LoginRoute,
+  NotificationRoute: NotificationRoute,
   CompanionCreateRoute: CompanionCreateRoute,
   SettingsProfileRoute: SettingsProfileRoute,
   ToolCreateRoute: ToolCreateRoute,
@@ -329,6 +351,7 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/login",
+        "/notification",
         "/companion/create",
         "/settings/profile",
         "/tool/create",
@@ -346,6 +369,9 @@ export const routeTree = rootRoute
     },
     "/login": {
       "filePath": "login.tsx"
+    },
+    "/notification": {
+      "filePath": "notification.tsx"
     },
     "/companion/create": {
       "filePath": "companion/create.tsx"

@@ -55,7 +55,6 @@ export const TweetCard = ({ tweet }: { tweet: TweetCardProps }) => {
   const [hoveredOnMenu, setHoveredOnMenu] = useState(false);
 
   const handleEmojiSelect = async (emoji: { native: string }) => {
-    console.log("Selected emoji:", emoji.native);
     attachReaction(tweet.id, { emoji: emoji.native, account: null });
     await createTrigger({ tweetId: tweet.id, emoji: emoji.native });
     setShowEmojiPicker(false);
